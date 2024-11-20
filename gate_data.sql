@@ -7,9 +7,13 @@
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
-SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-START TRANSACTION;
-SET time_zone = "+00:00";
+DROP DATABASE IF EXISTS gate_data;
+
+-- Créer une nouvelle base de données
+CREATE DATABASE gate_data;
+
+-- Utiliser la base de données nouvellement créée
+USE gate_data;
 
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
