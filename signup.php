@@ -8,9 +8,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $mail = trim($_POST['mail']);
     $password = $_POST['password'];
     $password_confirm = $_POST['password_confirm'];
-    $photo = 'default.png'; // Default profile photo
+    $photo = 'default.png';
 
-    // Check if email is already used
     $query_check_email = "SELECT * FROM Utilisateur WHERE Email = ?";
     $stmt_check_email = mysqli_prepare($connection, $query_check_email);
     mysqli_stmt_bind_param($stmt_check_email, "s", $mail);
@@ -26,34 +25,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         $Statu = 'en attente';
 
-        // Handle the file upload
         if (isset($_FILES['photo']) && $_FILES['photo']['error'] === UPLOAD_ERR_OK) {
             $upload_dir = 'pdp/';
-            // Generate a unique name for the file
             $photo = uniqid() . '_' . basename($_FILES['photo']['name']);
             $uploaded_file = $upload_dir . $photo;
 
-            // Ensure the upload directory exists
             if (!is_dir($upload_dir)) {
                 mkdir($upload_dir, 0777, true);
             }
 
-            // Move the uploaded file to the target directory
             if (!move_uploaded_file($_FILES['photo']['tmp_name'], $uploaded_file)) {
                 $error_message = "Échec du téléchargement de la photo.";
-                $photo = 'default.png'; // Revert to default in case of failure
+                $photo = 'default.png';
             }
         } elseif ($_FILES['photo']['error'] !== UPLOAD_ERR_NO_FILE) {
-            // Handle specific upload errors
             $error_message = "Erreur lors du téléchargement de l'image. Code : " . $_FILES['photo']['error'];
         }
 
         if (!isset($error_message)) {
-            // Insert user data into the database
-            $hashed_password = password_hash($password, PASSWORD_BCRYPT); // Hash password for security
             $query = "INSERT INTO Utilisateur (Email, MDP, Nom, Prenom, Statu, photo) VALUES (?, ?, ?, ?, ?, ?)";
             $stmt = mysqli_prepare($connection, $query);
-            mysqli_stmt_bind_param($stmt, "ssssss", $mail, $hashed_password, $nom, $prenom, $Statu, $photo);
+            mysqli_stmt_bind_param($stmt, "ssssss", $mail, $password, $nom, $prenom, $Statu, $photo);
 
             if (mysqli_stmt_execute($stmt)) {
                 $userId = mysqli_insert_id($connection);
