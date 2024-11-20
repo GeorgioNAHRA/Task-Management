@@ -3,9 +3,9 @@ session_start();
 include 'db.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $nom = $_POST['nom'];
-    $prenom = $_POST['prenom'];
-    $mail = $_POST['mail'];
+    $nom = trim($_POST['nom']);
+    $prenom = trim($_POST['prenom']);
+    $mail = trim($_POST['mail']);
     $password = $_POST['password'];
     $password_confirm = $_POST['password_confirm'];
     $photo = 'default.png'; // Default profile photo
@@ -27,9 +27,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $Statu = 'en attente';
 
         // Handle the file upload
-        if (isset($_FILES['photo']) && $_FILES['photo']['error'] == UPLOAD_ERR_OK) {
+        if (isset($_FILES['photo']) && $_FILES['photo']['error'] === UPLOAD_ERR_OK) {
             $upload_dir = 'pdp/';
-            $uploaded_file = $upload_dir . basename($_FILES['photo']['name']);
+            // Generate a unique name for the file
+            $photo = uniqid() . '_' . basename($_FILES['photo']['name']);
+            $uploaded_file = $upload_dir . $photo;
 
             // Ensure the upload directory exists
             if (!is_dir($upload_dir)) {
@@ -37,28 +39,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
 
             // Move the uploaded file to the target directory
-            if (move_uploaded_file($_FILES['photo']['tmp_name'], $uploaded_file)) {
-                $photo = basename($_FILES['photo']['name']);
-            } else {
+            if (!move_uploaded_file($_FILES['photo']['tmp_name'], $uploaded_file)) {
                 $error_message = "Échec du téléchargement de la photo.";
+                $photo = 'default.png'; // Revert to default in case of failure
             }
+        } elseif ($_FILES['photo']['error'] !== UPLOAD_ERR_NO_FILE) {
+            // Handle specific upload errors
+            $error_message = "Erreur lors du téléchargement de l'image. Code : " . $_FILES['photo']['error'];
         }
 
-        // Insert user data into the database
-        $query = "INSERT INTO Utilisateur (Email, MDP, Nom, Prenom, Statu, photo) VALUES (?, ?, ?, ?, ?, ?)";
-        $stmt = mysqli_prepare($connection, $query);
-        mysqli_stmt_bind_param($stmt, "ssssss", $mail, $password, $nom, $prenom, $Statu, $photo);
-        
-        if (mysqli_stmt_execute($stmt)) {
-            $userId = mysqli_insert_id($connection);
-            $_SESSION['user_id'] = $userId;
-            $_SESSION['nom'] = $nom;
-            $_SESSION['prenom'] = $prenom;
-            $_SESSION['mail'] = $mail;
-            header('Location: gate.php');
-            exit();
-        } else {
-            $error_message = 'Une erreur s\'est produite lors de l\'inscription.';
+        if (!isset($error_message)) {
+            // Insert user data into the database
+            $hashed_password = password_hash($password, PASSWORD_BCRYPT); // Hash password for security
+            $query = "INSERT INTO Utilisateur (Email, MDP, Nom, Prenom, Statu, photo) VALUES (?, ?, ?, ?, ?, ?)";
+            $stmt = mysqli_prepare($connection, $query);
+            mysqli_stmt_bind_param($stmt, "ssssss", $mail, $hashed_password, $nom, $prenom, $Statu, $photo);
+
+            if (mysqli_stmt_execute($stmt)) {
+                $userId = mysqli_insert_id($connection);
+                $_SESSION['user_id'] = $userId;
+                $_SESSION['nom'] = $nom;
+                $_SESSION['prenom'] = $prenom;
+                $_SESSION['mail'] = $mail;
+                header('Location: gate.php');
+                exit();
+            } else {
+                $error_message = 'Une erreur s\'est produite lors de l\'inscription : ' . mysqli_error($connection);
+            }
         }
     }
 }
