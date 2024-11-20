@@ -1,0 +1,134 @@
+/* Styles généraux */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+/* Styles pour la barre de navigation latérale */
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 250px;
+    height: 100%;
+    background-color: #25274d;
+    color: #fff;
+    padding-top: 60px;
+    transition: 0.5s;
+    z-index: 1000;
+}
+
+.sidebar header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.sidebar header .toggle {
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+.sidebar .menu-bar {
+    padding: 20px;
+}
+
+.sidebar .menu-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar .menu-links .nav-link {
+    margin-bottom: 10px;
+}
+
+.sidebar .bottom-content {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 20px;
+}
+
+/* Styles pour la section "home" */
+.home {
+    padding: 20px;
+}
+
+/* Styles pour le formulaire */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.invalid-feedback {
+    color: red;
+}
+
+/* Styles pour la barre de navigation */
+.navbar {
+    background-color: #25274d;
+    color: #fff;
+    padding: 15px 20px;
+}
+
+.navbar header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.navbar .image-text {
+    display: flex;
+    align-items: center;
+}
+
+.navbar .image-text .image img {
+    width: 40px;
+    height: auto;
+    margin-right: 10px;
+}
+
+
+
+.navbar .menu-bar {
+    display: flex;
+    align-items: center;
+}
+
+.navbar .menu-bar .menu-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.navbar .menu-bar .menu-links .nav-link {
+    margin-right: 20px;
+    text-decoration: none;
+    color: #fff;
+    font-weight: bold;
+}
+
+.navbar .menu-bar .menu-links .nav-link:hover {
+    text-decoration: underline;
+}
+
+.navbar .mode {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.navbar .mode .sun-moon {
+    margin-right: 10px;
+}
+
+.navbar .mode .icon {
+    font-size: 1.5rem;
+}

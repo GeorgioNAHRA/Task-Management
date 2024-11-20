@@ -1,0 +1,149 @@
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    height: 100vh;
+    margin: 0;
+    background-color: #f4f4f4;
+}
+
+.container {
+    display: flex;
+    flex-direction: row;
+    width: 90%;
+    max-width: 1200px;
+    margin-top: 20px;
+}
+
+.calendar-container {
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    margin: 20px;
+    flex: 3;
+}
+
+.project-form {
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    flex: 1;
+    margin: 20px;
+}
+
+.calendar-navigation {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.calendar-navigation button {
+    padding: 10px;
+    margin: 0 10px;
+    background: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s;
+    font-size: 20px;
+}
+
+.calendar-navigation button:hover {
+    background: #0056b3;
+}
+
+#currentMonthYear {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.month {
+    margin-bottom: 20px;
+}
+
+.month h2 {
+    text-align: center;
+    margin: 0 0 10px;
+}
+
+.weekdays, .days {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.weekdays div, .days div {
+    width: 14.28%;
+    text-align: center;
+    padding: 10px 0;
+    box-sizing: border-box;
+}
+
+.weekdays {
+    border-bottom: 1px solid #ddd;
+}
+
+.weekdays div {
+    font-weight: bold;
+}
+
+.days div {
+    margin: 5px 0;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.day {
+    background: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.day.project {
+    background: #ffd700;
+    color: #fff;
+    font-weight: bold;
+}
+
+.project-list {
+    font-size: 12px;
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.project-form h3 {
+    margin-top: 0;
+}
+
+.project-form form {
+    display: flex;
+    flex-direction: column;
+}
+
+.project-form label {
+    margin-top: 10px;
+}
+
+.project-form input, .project-form button {
+    padding: 10px;
+    margin-top: 5px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+}
+
+.project-form button {
+    background: #28a745;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.project-form button:hover {
+    background: #218838;
+}
