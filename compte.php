@@ -6,33 +6,19 @@ $error_message = '';
 
 // Handle form submissions
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (isset($_POST['confirm_delete'])) {
-        // Handle account deletion
-        $user_id = $_SESSION['user_id'];
-        $delete_query = "DELETE FROM Utilisateur WHERE IDUser = ?";
-        $delete_stmt = mysqli_prepare($connection, $delete_query);
-        mysqli_stmt_bind_param($delete_stmt, "s", $user_id);
-        mysqli_stmt_execute($delete_stmt);
-
-        session_unset();
-        session_destroy();
-
-        header('Location: index.php');
-        exit();
-    } elseif (isset($_SESSION['user_id'])) {
-        // Handle profile update
+    if (isset($_SESSION['user_id'])) {
         $user_id = $_SESSION['user_id'];
 
         if (isset($_POST['delete_photo'])) {
-            // Fetch the current photo to delete it
+            // Suppression de la photo actuelle
             $query = "SELECT photo FROM Utilisateur WHERE IDUser = ?";
             $stmt = mysqli_prepare($connection, $query);
             mysqli_stmt_bind_param($stmt, "s", $user_id);
             mysqli_stmt_execute($stmt);
             $result = mysqli_stmt_get_result($stmt);
             $user_info = mysqli_fetch_assoc($result);
-            $current_photo = $user_info['photo'];
 
+            $current_photo = $user_info['photo'];
             if ($current_photo !== 'default.png') {
                 $photo_path = "pdp/" . $current_photo;
                 if (file_exists($photo_path)) {
@@ -40,122 +26,72 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
             }
 
-            // Set photo to default.png
             $default_photo = 'default.png';
             $update_photo_query = "UPDATE Utilisateur SET photo=? WHERE IDUser=?";
             $update_photo_stmt = mysqli_prepare($connection, $update_photo_query);
             mysqli_stmt_bind_param($update_photo_stmt, "ss", $default_photo, $user_id);
-            if (mysqli_stmt_execute($update_photo_stmt)) {
-                mysqli_stmt_close($update_photo_stmt);
-                header('Location: gate.php?photo_deleted=1');
-                exit();
-            } else {
-                $error_message = 'Une erreur s\'est produite lors de la suppression de la photo.';
-            }
-        } else {
-            $nom = $_POST['nom'];
-            $prenom = $_POST['prenom'];
-            $mail = $_POST['mail'];
-
-            $query = "UPDATE Utilisateur SET Nom=?, Prenom=?, Email=? WHERE IDUser=?";
-            $stmt = mysqli_prepare($connection, $query);
-            mysqli_stmt_bind_param($stmt, "ssss", $nom, $prenom, $mail, $user_id);
-
-            if (mysqli_stmt_execute($stmt)) {
-                // Handle the file upload
-                if (isset($_FILES['photo']) && $_FILES['photo']['error'] == UPLOAD_ERR_OK) {
-                    $upload_dir = 'pdp/';
-                    $uploaded_file = $upload_dir . basename($_FILES['photo']['name']);
-
-                    // Ensure the upload directory exists
-                    if (!is_dir($upload_dir)) {
-                        mkdir($upload_dir, 0777, true);
-                    }
-
-                    // Move the uploaded file to the target directory
-                    if (move_uploaded_file($_FILES['photo']['tmp_name'], $uploaded_file)) {
-                        $photo = basename($_FILES['photo']['name']);
-                        $update_photo_query = "UPDATE Utilisateur SET photo=? WHERE IDUser=?";
-                        $update_photo_stmt = mysqli_prepare($connection, $update_photo_query);
-                        mysqli_stmt_bind_param($update_photo_stmt, "ss", $photo, $user_id);
-                        mysqli_stmt_execute($update_photo_stmt);
-                        mysqli_stmt_close($update_photo_stmt);
-                    } else {
-                        $error_message = "Échec du téléchargement de la photo.";
-                    }
-                }
-                header('Location: gate.php?success=1');
-                exit();
-            } else {
-                $error_message = 'Une erreur s\'est produite lors de la mise à jour des informations.';
-            }
-
-            mysqli_stmt_close($stmt);
+            mysqli_stmt_execute($update_photo_stmt);
+            header('Location: gate.php?photo_deleted=1');
+            exit();
         }
-    } else {
-        // Handle registration
-        $nom = $_POST['nom'];
-        $prenom = $_POST['prenom'];
-        $mail = $_POST['mail'];
-        $password = $_POST['password'];
-        $password_confirm = $_POST['password_confirm'];
-        $photo = 'default.png'; // Default profile photo
 
-        // Check if email is already used
-        $query_check_email = "SELECT * FROM Utilisateur WHERE Email = ?";
-        $stmt_check_email = mysqli_prepare($connection, $query_check_email);
-        mysqli_stmt_bind_param($stmt_check_email, "s", $mail);
-        mysqli_stmt_execute($stmt_check_email);
-        $result_check_email = mysqli_stmt_get_result($stmt_check_email);
+        // Mise à jour des informations utilisateur
+        $nom = trim($_POST['nom']);
+        $prenom = trim($_POST['prenom']);
+        $mail = trim($_POST['mail']);
 
-        if (mysqli_num_rows($result_check_email) > 0) {
-            $error_message = 'Cette adresse e-mail est déjà utilisée.';
-        } elseif ($password !== $password_confirm) {
-            $error_message = 'Les mots de passe ne correspondent pas.';
-        } elseif (!filter_var($mail, FILTER_VALIDATE_EMAIL)) {
-            $error_message = 'L\'adresse email n\'est pas valide.';
-        } else {
-            $Statu = 'en attente';
+        $query = "UPDATE Utilisateur SET Nom=?, Prenom=?, Email=? WHERE IDUser=?";
+        $stmt = mysqli_prepare($connection, $query);
+        mysqli_stmt_bind_param($stmt, "ssss", $nom, $prenom, $mail, $user_id);
 
-            // Handle the file upload
-            if (isset($_FILES['photo']) && $_FILES['photo']['error'] == UPLOAD_ERR_OK) {
+        if (mysqli_stmt_execute($stmt)) {
+            // Gestion de l'upload de photo
+            if (isset($_FILES['photo']) && $_FILES['photo']['error'] === UPLOAD_ERR_OK) {
                 $upload_dir = 'pdp/';
-                $uploaded_file = $upload_dir . basename($_FILES['photo']['name']);
+                $photo = uniqid() . '_' . basename($_FILES['photo']['name']);
+                $uploaded_file = $upload_dir . $photo;
 
-                // Ensure the upload directory exists
+                // Création du dossier si nécessaire
                 if (!is_dir($upload_dir)) {
                     mkdir($upload_dir, 0777, true);
                 }
 
-                // Move the uploaded file to the target directory
+                // Suppression de l'ancienne photo si elle n'est pas par défaut
+                $query = "SELECT photo FROM Utilisateur WHERE IDUser = ?";
+                $stmt = mysqli_prepare($connection, $query);
+                mysqli_stmt_bind_param($stmt, "s", $user_id);
+                mysqli_stmt_execute($stmt);
+                $result = mysqli_stmt_get_result($stmt);
+                $user_info = mysqli_fetch_assoc($result);
+
+                $current_photo = $user_info['photo'];
+                if ($current_photo !== 'default.png') {
+                    $photo_path = "pdp/" . $current_photo;
+                    if (file_exists($photo_path)) {
+                        unlink($photo_path);
+                    }
+                }
+
+                // Upload de la nouvelle photo
                 if (move_uploaded_file($_FILES['photo']['tmp_name'], $uploaded_file)) {
-                    $photo = basename($_FILES['photo']['name']);
+                    $update_photo_query = "UPDATE Utilisateur SET photo=? WHERE IDUser=?";
+                    $update_photo_stmt = mysqli_prepare($connection, $update_photo_query);
+                    mysqli_stmt_bind_param($update_photo_stmt, "ss", $photo, $user_id);
+                    mysqli_stmt_execute($update_photo_stmt);
                 } else {
                     $error_message = "Échec du téléchargement de la photo.";
                 }
             }
 
-            // Insert user data into the database
-            $query = "INSERT INTO Utilisateur (Email, MDP, Nom, Prenom, Statu, photo) VALUES (?, ?, ?, ?, ?, ?)";
-            $stmt = mysqli_prepare($connection, $query);
-            mysqli_stmt_bind_param($stmt, "ssssss", $mail, $password, $nom, $prenom, $Statu, $photo);
-
-            if (mysqli_stmt_execute($stmt)) {
-                $userId = mysqli_insert_id($connection);
-                $_SESSION['user_id'] = $userId;
-                $_SESSION['nom'] = $nom;
-                $_SESSION['prenom'] = $prenom;
-                $_SESSION['mail'] = $mail;
-                header('Location: gate.php');
-                exit();
-            } else {
-                $error_message = 'Une erreur s\'est produite lors de l\'inscription.';
-            }
+            header('Location: gate.php?success=1');
+            exit();
+        } else {
+            $error_message = 'Une erreur s\'est produite lors de la mise à jour des informations.';
         }
     }
 }
 
-// Fetch user info for the form if logged in
+// Récupérer les informations utilisateur si connecté
 $user_info = null;
 if (isset($_SESSION['user_id'])) {
     $user_id = $_SESSION['user_id'];
@@ -165,15 +101,6 @@ if (isset($_SESSION['user_id'])) {
     mysqli_stmt_execute($stmt);
     $result = mysqli_stmt_get_result($stmt);
     $user_info = mysqli_fetch_assoc($result);
-    mysqli_stmt_close($stmt);
-}
-
-if (isset($_GET['success']) && $_GET['success'] == '1') {
-    $success_message = "Vos informations ont été mises à jour avec succès.";
-}
-
-if (isset($_GET['photo_deleted']) && $_GET['photo_deleted'] == '1') {
-    $photo_deleted_message = "Votre photo de profil a été supprimée avec succès.";
 }
 ?>
 
