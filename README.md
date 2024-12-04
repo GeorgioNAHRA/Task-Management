@@ -48,8 +48,5 @@ module.exports = {
 
 
 
-- Run the CLI tool to scan your template files for classes and build your CSS.
-  -dans le terminal :
-
 
     npx tailwindcss -i ./src/input.css -o ./src/output.css --watch
