@@ -51,17 +51,17 @@ if (isset($_SESSION['user_id'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gate - Gestion de projet</title>
+    <title>MNB - Gestion de projet</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <link rel="stylesheet" href="GATE.css">
+    <link rel="stylesheet" href="MNB.css">
 </head>
 <body>
     <!-- Header -->
     <header class="bg-dark text-white py-3">
         <div class="container">
             <div class="d-flex justify-content-between align-items-center">
-                <a href="GATE.php" class="text-white text-decoration-none"><h1 class="h3 mb-0">Gate</h1></a>
+                <a href="MNB.php" class="text-white text-decoration-none"><h1 class="h3 mb-0">MNB</h1></a>
                 <nav>
                     <ul class="nav">
                         <li class="nav-item dropdown">
@@ -76,7 +76,7 @@ if (isset($_SESSION['user_id'])) {
                             <button class="btn btn-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">Ressources</button>
                             <ul class="dropdown-menu">
                                 <li><a class="dropdown-item" href="#">Blog</a></li>
-                                <li><a class="dropdown-item" href="#">Gate Académie</a></li>
+                                <li><a class="dropdown-item" href="#">MNB Académie</a></li>
                                 <li><a class="dropdown-item" href="#">Site d'aide</a></li>
                             </ul>
                         </li>
@@ -91,8 +91,8 @@ if (isset($_SESSION['user_id'])) {
                         <li class="nav-item dropdown">
                             <button class="btn btn-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">Télécharger</button>
                             <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="#">Gate</a></li>
-                                <li><a class="dropdown-item" href="#">Gate Calendrier</a></li>
+                                <li><a class="dropdown-item" href="#">MNB</a></li>
+                                <li><a class="dropdown-item" href="#">MNB Calendrier</a></li>
                                 <li><a class="dropdown-item" href="#">Clipper</a></li>
                             </ul>
                         </li>
@@ -111,7 +111,7 @@ if (isset($_SESSION['user_id'])) {
                             <a href="dashboard.php" class="btn btn-light me-2">Admin</a>
                         <?php endif; ?>
                         <?php if (isset($_SESSION['statu']) && ($_SESSION['statu'] === 'accepter' || $_SESSION['statu'] === 'Admin')): ?>
-                            <a href="Essayer_gate.php" class="btn btn-light me-1">Essayer Gate</a>
+                            <a href="Essayer_MNB.php" class="btn btn-light me-1">Essayer MNB</a>
                         <?php endif; ?>
                         <a href="compte.php" class="btn btn-outline-light ms-2">Compte</a>
                         <a href="logout.php" class="btn btn-outline-light ms-2">Se déconnecter</a>
@@ -141,7 +141,7 @@ if (isset($_SESSION['user_id'])) {
     <!-- Main Content -->
     <main class="py-5">
     <div class="container">
-        <h1 class="text-center">Bienvenue sur <span>Gate</span></h1>
+        <h1 class="text-center">Bienvenue sur <span>MNB</span></h1>
         <p class="text-center">Votre outil de gestion de projet ultime.</p>
         <div class="row">
             <div class="col-md-6">
@@ -149,7 +149,7 @@ if (isset($_SESSION['user_id'])) {
                     <img src="accueil.jpg" class="card-img-top" alt="...">
                     <div class="card-body">
                         <h5 class="card-title"><span>Projet</span></h5>
-                        <p class="card-text">Dans l'ensemble, la page projet semble être une introduction à un projet spécifique sur la plateforme "Gate", offrant aux utilisateurs un aperçu rapide du projet et la possibilité d'en savoir plus ou de s'y engager davantage.</p>
+                        <p class="card-text">Dans l'ensemble, la page projet semble être une introduction à un projet spécifique sur la plateforme "MNB", offrant aux utilisateurs un aperçu rapide du projet et la possibilité d'en savoir plus ou de s'y engager davantage.</p>
                     </div>
                 </div>
             </div>
@@ -164,57 +164,8 @@ if (isset($_SESSION['user_id'])) {
             </div>
         </div>
     </div>
-    <figure class="figure">
-  <img src="page.jpg" class="figure-img img-fluid rounded" alt="...">
   <figcaption class="figure-caption"></figcaption>
 </figure>
-
-<div class="col-md-6">
-                <div class="card" style="width: 194%;">
-                    <img src="Calendrier.jpg" class="card-img-top" alt="...">
-                    <div class="card-body">
-                        <h5 class="card-title"><span>Calendrier</h5></span>
-                        <p class="card-text"><div class="accordion" id="accordionExample">
-  <div class="accordion-item">
-    <h2 class="accordion-header">
-      <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-        Planification des événements
-      </button>
-    </h2>
-    <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
-      <div class="accordion-body">
-        Le calendrier permet aux utilisateurs de planifier des événements tels que des réunions, des échéances, des présentations, etc. Ces événements peuvent être affichés sur une vue quotidienne, hebdomadaire ou mensuelle.
-      </div>
-    </div>
-  </div>
-  <div class="accordion-item">
-    <h2 class="accordion-header">
-      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-        Suivi des tâches
-      </button>
-    </h2>
-    <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
-      <div class="accordion-body">
-        Les tâches peuvent être ajoutées au calendrier avec leurs dates d'échéance. Cela permet aux utilisateurs de visualiser rapidement les tâches à accomplir et de les organiser en fonction de leurs priorités.
-      </div>
-    </div>
-  </div>
-  <div class="accordion-item">
-    <h2 class="accordion-header">
-      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-       Vue multi-utilisateur
-      </button>
-    </h2>
-    <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
-      <div class="accordion-body">
-        Dans les environnements de travail collaboratif, le calendrier peut prendre en charge une vue multi-utilisateur, montrant les événements et les tâches assignées à différentes personnes au sein de l'équipe.
-      </div>
-    </div>
-  </div>
-</div></p>
-                    </div>
-                </div>
-            </div>
 </main>
 
 
@@ -223,7 +174,7 @@ if (isset($_SESSION['user_id'])) {
         <div class="container">
             <div class="row">
                 <div class="col-md-3">
-                    <h5>Gate</h5>
+                    <h5>MNB</h5>
                     <ul class="list-unstyled">
                         <li><a href="#" class="text-white text-decoration-none">Accueil</a></li>
                         <li><a href="#" class="text-white text-decoration-none">À propos</a></li>
@@ -270,7 +221,7 @@ if (isset($_SESSION['user_id'])) {
             </div>
             <div class="row mt-4">
                 <div class="col-md-12 text-center">
-                    <p class="mb-0">&copy; 2024 Gate. Tous droits réservés.</p>
+                    <p class="mb-0">&copy; 2024 MNB. Tous droits réservés.</p>
                 </div>
             </div>
         </div>
@@ -290,7 +241,7 @@ if (isset($_SESSION['user_id'])) {
                 if (xhr.status === 200) {
                     const response = JSON.parse(xhr.responseText);
                     if (response.success) {
-                        window.location.href = 'Gate.php';
+                        window.location.href = 'MNB.php';
                     } else {
                         document.getElementById('error-message').innerText = response.message;
                     }

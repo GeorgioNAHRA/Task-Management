@@ -1,6 +1,6 @@
 <?php
 session_start();
-include('../Gate/db.php');
+include('../MNB/db.php');
 
 header('Content-Type: application/json');
 

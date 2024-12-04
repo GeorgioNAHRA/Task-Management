@@ -53,7 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $_SESSION['nom'] = $nom;
                 $_SESSION['prenom'] = $prenom;
                 $_SESSION['mail'] = $mail;
-                header('Location: gate.php');
+                header('Location: MNB.php');
                 exit();
             } else {
                 $error_message = 'Une erreur s\'est produite lors de l\'inscription : ' . mysqli_error($connection);
@@ -68,17 +68,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gate - Gestion de projet</title>
+    <title>MNB - Gestion de projet</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <link rel="stylesheet" href="GATE.css">
+    <link rel="stylesheet" href="MNB.css">
 </head>
 <body>
     <!-- Header -->
     <header class="bg-dark text-white py-3">
         <div class="container">
             <div class="d-flex justify-content-between align-items-center">
-            <a href="gate.php" class="text-white text-decoration-none"><h1 class="h3 mb-0">Gate</h1></a>
+            <a href="MNB.php" class="text-white text-decoration-none"><h1 class="h3 mb-0">MNB</h1></a>
                 <nav>
                     <ul class="nav">
                         <!-- Nav items here -->
@@ -104,7 +104,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <button type="submit" class="btn btn-primary">Connecter</button>
                     </form>
                     <a href="signup.php" class="btn btn-light">S'inscrire</a>
-                    <a href="user.php" class="btn btn-light">Essayer Gate</a>
+                    <a href="user.php" class="btn btn-light">Essayer MNB</a>
                 </div>
             </div>
         </div>
@@ -177,7 +177,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class="container">
             <div class="row">
                 <div class="col-md-3">
-                    <h5>Gate</h5>
+                    <h5>MNB</h5>
                     <ul class="list-unstyled">
                         <li><a href="#" class="text-white text-decoration-none">Accueil</a></li>
                         <li><a href="#" class="text-white text-decoration-none">À propos</a></li>
@@ -224,7 +224,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
             <div class="row mt-4">
                 <div class="col-md-12 text-center">
-                    <p class="mb-0">&copy; 2024 Gate. Tous droits réservés.</p>
+                    <p class="mb-0">&copy; 2024 MNB. Tous droits réservés.</p>
                 </div>
             </div>
         </div>

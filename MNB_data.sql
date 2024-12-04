@@ -7,13 +7,13 @@
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
-DROP DATABASE IF EXISTS gate_data;
+DROP DATABASE IF EXISTS MNB_data;
 
 -- Créer une nouvelle base de données
-CREATE DATABASE gate_data;
+CREATE DATABASE MNB_data;
 
 -- Utiliser la base de données nouvellement créée
-USE gate_data;
+USE MNB_data;
 
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -22,7 +22,7 @@ USE gate_data;
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `gate_data`
+-- Database: `MNB_data`
 --
 
 -- --------------------------------------------------------

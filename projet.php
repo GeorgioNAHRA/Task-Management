@@ -17,7 +17,7 @@ $user_info = [
 $servername = "localhost";
 $username = "root";
 $password = "";
-$dbname = "gate_data";
+$dbname = "MNB_data";
 
 // Connexion à la base de données
 $conn = new mysqli($servername, $username, $password, $dbname);
@@ -64,9 +64,9 @@ $conn->close();
     <div class="sidebar">
         <!-- Sidebar content -->
         <div class="logo-details">
-            <a href="GATE.php" class="active">
+            <a href="MNB.php" class="active">
                 <i class="bx bxl-c-plus-plus"></i>
-                <span class="logo_name">GATE</span>
+                <span class="logo_name">MNB</span>
             </a>
         </div>
         <ul class="nav-links">

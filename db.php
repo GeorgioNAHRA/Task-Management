@@ -3,7 +3,7 @@
 $hostname = "localhost";
 $username = "root";
 $password = "";
-$database = "gate_data";
+$database = "mnb_data";
 
 $connection = mysqli_connect($hostname, $username, $password, $database);
 

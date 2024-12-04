@@ -31,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $update_photo_stmt = mysqli_prepare($connection, $update_photo_query);
             mysqli_stmt_bind_param($update_photo_stmt, "ss", $default_photo, $user_id);
             mysqli_stmt_execute($update_photo_stmt);
-            header('Location: gate.php?photo_deleted=1');
+            header('Location: MNB.php?photo_deleted=1');
             exit();
         }
 
@@ -83,7 +83,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
             }
 
-            header('Location: gate.php?success=1');
+            header('Location: MNB.php?success=1');
             exit();
         } else {
             $error_message = 'Une erreur s\'est produite lors de la mise à jour des informations.';
@@ -109,10 +109,10 @@ if (isset($_SESSION['user_id'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gate - Gestion de projet</title>
+    <title>MNB - Gestion de projet</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <link rel="stylesheet" href="GATE.css">
+    <link rel="stylesheet" href="MNB.css">
     <style>
         .disabled-email {
             background-color: #e9ecef;
@@ -125,7 +125,7 @@ if (isset($_SESSION['user_id'])) {
     <header class="bg-dark text-white py-3">
         <div class="container">
             <div class="d-flex justify-content-between align-items-center">
-                <a href="gate.php" class="text-white text-decoration-none"><h1 class="h3 mb-0">Gate</h1></a>
+                <a href="MNB.php" class="text-white text-decoration-none"><h1 class="h3 mb-0">MNB</h1></a>
                 <nav>
                     <ul class="nav">
                         <!-- Nav items here -->
@@ -143,7 +143,7 @@ if (isset($_SESSION['user_id'])) {
                             <a href="index.php" class="btn btn-light me-2">Admin</a>
                         <?php endif; ?>
                         <?php if (isset($_SESSION['statu']) && ($_SESSION['statu'] === 'accepter' || $_SESSION['statu'] === 'Admin')): ?>
-                            <a href="Essayer_gate.php" class="btn btn-light me-1">Essayer Gate</a>
+                            <a href="Essayer_MNB.php" class="btn btn-light me-1">Essayer MNB</a>
                         <?php endif; ?>
                         <a href="compte.php" class="btn btn-outline-light ms-2">Compte</a>
                         <a href="logout.php" class="btn btn-outline-light ms-2">Se déconnecter</a>
@@ -235,7 +235,7 @@ if (isset($_SESSION['user_id'])) {
         <div class="container">
             <div class="row">
                 <div class="col-md-3">
-                    <h5>Gate</h5>
+                    <h5>MNB</h5>
                     <ul class="list-unstyled">
                         <li><a href="#" class="text-white text-decoration-none">Accueil</a></li>
                         <li><a href="#" class="text-white text-decoration-none">À propos</a></li>
@@ -282,7 +282,7 @@ if (isset($_SESSION['user_id'])) {
             </div>
             <div class="row mt-4">
                 <div class="col-md-12 text-center">
-                    <p class="mb-0">&copy; 2024 Gate. Tous droits réservés.</p>
+                    <p class="mb-0">&copy; 2024 MNB. Tous droits réservés.</p>
                 </div>
             </div>
         </div>
