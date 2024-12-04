@@ -38,11 +38,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Mise à jour des informations utilisateur
         $nom = trim($_POST['nom']);
         $prenom = trim($_POST['prenom']);
-        $mail = trim($_POST['mail']);
+        $mail = $user_info['Email']; // Préserver l'e-mail d'origine
 
-        $query = "UPDATE Utilisateur SET Nom=?, Prenom=?, Email=? WHERE IDUser=?";
+        $query = "UPDATE Utilisateur SET Nom=?, Prenom=? WHERE IDUser=?";
         $stmt = mysqli_prepare($connection, $query);
-        mysqli_stmt_bind_param($stmt, "ssss", $nom, $prenom, $mail, $user_id);
+        mysqli_stmt_bind_param($stmt, "sss", $nom, $prenom, $user_id);
 
         if (mysqli_stmt_execute($stmt)) {
             // Gestion de l'upload de photo
@@ -110,13 +110,12 @@ if (isset($_SESSION['user_id'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MNB - Gestion de projet</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="MNB.css">
     <style>
-        .disabled-email {
+        .readonly-email {
             background-color: #e9ecef;
-            cursor: not-allowed;
+            pointer-events: none;
         }
     </style>
 </head>
@@ -128,7 +127,7 @@ if (isset($_SESSION['user_id'])) {
                 <a href="MNB.php" class="text-white text-decoration-none"><h1 class="h3 mb-0">MNB</h1></a>
                 <nav>
                     <ul class="nav">
-                        <!-- Nav items here -->
+                        <!-- Nav items -->
                     </ul>
                 </nav>
                 <div class="d-flex align-items-center">
@@ -139,30 +138,9 @@ if (isset($_SESSION['user_id'])) {
                                 <img src="pdp/<?php echo htmlspecialchars($user_info['photo']); ?>" alt="Profile Picture" class="rounded-circle" style="width: 30px; height: 30px; object-fit: cover;">
                             <?php endif; ?>
                         </span>
-                        <?php if (isset($_SESSION['admin_id'])): ?>
-                            <a href="index.php" class="btn btn-light me-2">Admin</a>
-                        <?php endif; ?>
-                        <?php if (isset($_SESSION['statu']) && ($_SESSION['statu'] === 'User' || $_SESSION['statu'] === 'Admin')): ?>
-                            <a href="Essayer_MNB.php" class="btn btn-light me-1">Essayer MNB</a>
-                        <?php endif; ?>
                         <a href="compte.php" class="btn btn-outline-light ms-2">Compte</a>
                         <a href="logout.php" class="btn btn-outline-light ms-2">Se déconnecter</a>
                     <?php else: ?>
-                        <button class="btn btn-outline-light me-1" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">Se connecter</button>
-                        <div class="dropdown-menu p-4">
-                            <form id="loginForm" method="post">
-                                <div id="error-message" style="color: red;"></div>
-                                <div class="mb-3">
-                                    <label for="exampleDropdownFormEmail2" class="form-label">Adresse email</label>
-                                    <input type="email" class="form-control" id="exampleDropdownFormEmail2" name="mail" placeholder="email@example.com" required>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="exampleDropdownFormPassword2" class="form-label">Mot de passe</label>
-                                    <input type="password" class="form-control" id="exampleDropdownFormPassword2" name="password" placeholder="Mot de passe" required>
-                                </div>
-                                <button type="submit" class="btn btn-primary">Se connecter</button>
-                            </form>
-                        </div>
                         <a href="signup.php" class="btn btn-light">S'inscrire</a>
                     <?php endif; ?>
                 </div>
@@ -176,55 +154,26 @@ if (isset($_SESSION['user_id'])) {
             <?php if ($error_message) : ?>
                 <p style="color: red;"><?php echo $error_message; ?></p>
             <?php endif; ?>
-            <?php if (isset($success_message)) : ?>
-                <p style="color: green;"><?php echo $success_message; ?></p>
-            <?php endif; ?>
-            <?php if (isset($photo_deleted_message)) : ?>
-                <p style="color: green;"><?php echo $photo_deleted_message; ?></p>
-            <?php endif; ?>
             <form class="row g-3 needs-validation" novalidate method="post" action="" enctype="multipart/form-data">
                 <div class="col-md-4">
                     <label for="nom" class="form-label">Nom</label>
                     <input type="text" class="form-control" id="nom" name="nom" value="<?php echo isset($user_info['Nom']) ? $user_info['Nom'] : ''; ?>" required>
-                    <div class="valid-feedback">
-                        Looks good!
-                    </div>
                 </div>
                 <div class="col-md-4">
                     <label for="prenom" class="form-label">Prénom</label>
                     <input type="text" class="form-control" id="prenom" name="prenom" value="<?php echo isset($user_info['Prenom']) ? $user_info['Prenom'] : ''; ?>" required>
-                    <div class="valid-feedback">
-                        Looks good!
-                    </div>
                 </div>
                 <div class="col-md-4">
                     <label for="mail" class="form-label">E-mail address</label>
-                    <input type="email" class="form-control disabled-email" id="mail" name="mail" value="<?php echo isset($user_info['Email']) ? $user_info['Email'] : ''; ?>" disabled>
-                    <div class="invalid-feedback">
-                        Veuillez fournir une adresse valide.
-                    </div>
+                    <input type="email" class="form-control readonly-email" id="mail" name="mail" value="<?php echo isset($user_info['Email']) ? $user_info['Email'] : ''; ?>" readonly>
+                    <small class="text-muted">Votre adresse e-mail ne peut pas être modifiée.</small>
                 </div>
                 <div class="col-md-4">
                     <label for="photo" class="form-label">Photo de profil</label>
                     <input type="file" class="form-control" id="photo" name="photo" accept="image/*">
                 </div>
-                <?php if ($user_info && $user_info['photo'] !== 'default.png'): ?>
-                <div class="col-md-12">
-                    <img src="pdp/<?php echo htmlspecialchars($user_info['photo']); ?>" alt="Photo de profil" width="150"><br>
-                </div>
-                <?php endif; ?>
                 <div class="col-12 d-flex justify-content-start gap-2">
                     <button type="submit" class="btn btn-primary">Enregistrer</button>
-                    <?php if ($user_info && $user_info['photo'] !== 'default.png'): ?>
-                        <form method="post" action="" class="d-inline">
-                            <input type="hidden" name="delete_photo" value="1">
-                            <button type="submit" class="btn btn-danger">Supprimer la photo de profil</button>
-                        </form>
-                    <?php endif; ?>
-                    <form method="post" action="" class="d-inline">
-                        <input type="hidden" name="confirm_delete" value="1">
-                        <button type="button" class="btn btn-danger" onclick="confirmDelete()">Supprimer mon compte</button>
-                    </form>
                 </div>
             </form>
         </div>
@@ -233,85 +182,10 @@ if (isset($_SESSION['user_id'])) {
     <!-- Footer -->
     <footer class="bg-dark text-white py-5">
         <div class="container">
-            <div class="row">
-                <div class="col-md-3">
-                    <h5>MNB</h5>
-                    <ul class="list-unstyled">
-                        <li><a href="#" class="text-white text-decoration-none">Accueil</a></li>
-                        <li><a href="#" class="text-white text-decoration-none">À propos</a></li>
-                        <li><a href="#" class="text-white text-decoration-none">Contact</a></li>
-                        <li><a href="#" class="text-white text-decoration-none">Blog</a></li>
-                    </ul>
-                </div>
-                <div class="col-md-3">
-                    <h5>Produit</h5>
-                    <ul class="list-unstyled">
-                        <li><a href="#" class="text-white text-decoration-none">Fonctionnalités</a></li>
-                        <li><a href="#" class="text-white text-decoration-none">Tarifs</a></li>
-                        <li><a href="#" class="text-white text-decoration-none">Intégrations</a></li>
-                        <li><a href="#" class="text-white text-decoration-none">API</a></li>
-                    </ul>
-                </div>
-                <div class="col-md-3">
-                    <h5>Ressources</h5>
-                    <ul class="list-unstyled">
-                        <li><a href="#" class="text-white text-decoration-none">Documentation</a></li>
-                        <li><a href="#" class="text-white text-decoration-none">Guides</a></li>
-                        <li><a href="#" class="text-white text-decoration-none">Support</a></li>
-                        <li><a href="#" class="text-white text-decoration-none">Communauté</a></li>
-                    </ul>
-                </div>
-                <div class="col-md-3">
-                    <h5>Entreprise</h5>
-                    <ul class="list-unstyled">
-                        <li><a href="#" class="text-white text-decoration-none">À propos</a></li>
-                        <li><a href="#" class="text-white text-decoration-none">Carrières</a></li>
-                        <li><a href="#" class="text-white text-decoration-none">Presse</a></li>
-                        <li><a href="#" class="text-white text-decoration-none">Blog</a></li>
-                    </ul>
-                </div>
-                <div class="col-md-3">
-                    <h5>Suivez-nous</h5>
-                    <ul class="list-unstyled d-flex gap-2">
-                        <li><a href="#" class="text-white"><i class="fab fa-facebook-f"></i></a></li>
-                        <li><a href="#" class="text-white"><i class="fab fa-twitter"></i></a></li>
-                        <li><a href="#" class="text-white"><i class="fab fa-linkedin"></i></a></li>
-                        <li><a href="#" class="text-white"><i class="fab fa-instagram"></i></a></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="row mt-4">
-                <div class="col-md-12 text-center">
-                    <p class="mb-0">&copy; 2024 MNB. Tous droits réservés.</p>
-                </div>
-            </div>
+            <p class="text-center">&copy; 2024 MNB. Tous droits réservés.</p>
         </div>
     </footer>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-    <script>
-        function confirmDelete() {
-            if (confirm("Êtes-vous sûr de vouloir supprimer votre compte ? Cette action est irréversible.")) {
-                document.querySelector('form[action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>"]').submit();
-            }
-        }
-
-        (() => {
-            'use strict';
-
-            const forms = document.querySelectorAll('.needs-validation');
-
-            Array.from(forms).forEach(form => {
-                form.addEventListener('submit', event => {
-                    if (!form.checkValidity()) {
-                        event.preventDefault();
-                        event.stopPropagation();
-                    }
-
-                    form.classList.add('was-validated');
-                }, false);
-            });
-        })();
-    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
