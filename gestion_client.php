@@ -28,7 +28,7 @@ if ($conn->connect_error) {
 
 // Fonction pour afficher les utilisateurs
 function afficherUtilisateurs($conn) {
-    $sql = "SELECT * FROM Utilisateur WHERE Statu='en attente' OR Statu='accepter'";
+    $sql = "SELECT * FROM Utilisateur WHERE Statu='User'";
     $result = $conn->query($sql);
 
     if ($result->num_rows > 0) {
@@ -38,9 +38,6 @@ function afficherUtilisateurs($conn) {
             echo '<td>' . $row["Nom"] . '</td>';
             echo '<td>' . $row["Prenom"] . '</td>';
             echo '<td>';
-            if ($row["Statu"] == 'en attente') {
-                echo '<form method="post" action="" style="display:inline-block;"><input type="hidden" name="user_id" value="' . $row["IDUser"] . '"><button type="submit" name="accept" class="btn btn-primary">Accepter</button></form> ';
-            }
             echo '<form method="post" action="" style="display:inline-block;"><input type="hidden" name="user_id" value="' . $row["IDUser"] . '"><button type="submit" name="delete" class="btn btn-danger">Supprimer</button></form>';
             echo '</td>';
             echo '</tr>';
@@ -78,10 +75,10 @@ function afficherProjetsEnCours($conn) {
     }
 }
 
-// Accepter un compte utilisateur
+// User un compte utilisateur
 if (isset($_POST['accept'])) {
     $user_id = $_POST['user_id'];
-    $sql = "UPDATE Utilisateur SET Statu='accepter' WHERE IDUser='$user_id'";
+    $sql = "UPDATE Utilisateur SET Statu='User' WHERE IDUser='$user_id'";
     
     if ($conn->query($sql) === TRUE) {
         echo "<p>Compte utilisateur accepté avec succès.</p>";
@@ -287,23 +284,6 @@ if (isset($_POST['supprimer_projet'])) {
         </nav>
 
         <div class="home-content">
-            <div class="users-table">
-                <h2>Utilisateurs en attente de validation</h2>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Nom</th>
-                            <th>Prénom</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody id="pending-users">
-                        <?php afficherUtilisateurs($conn); ?>
-                    </tbody>
-                </table>
-            </div>
-
             <div class="users-table">
                 <h2>Utilisateurs enregistrés</h2>
                 <table>

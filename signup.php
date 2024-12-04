@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } elseif (!filter_var($mail, FILTER_VALIDATE_EMAIL)) {
         $error_message = 'L\'adresse email n\'est pas valide.';
     } else {
-        $Statu = 'en attente';
+        $Statu = 'User';
 
         if (isset($_FILES['photo']) && $_FILES['photo']['error'] === UPLOAD_ERR_OK) {
             $upload_dir = 'pdp/';
@@ -159,10 +159,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <div class="form-check">
                     <input class="form-check-input" type="checkbox" value="" id="invalidCheck" required>
                     <label class="form-check-label" for="invalidCheck">
-                        Agree to terms and conditions
+                        Accepter les conditions d'utilisations
                     </label>
                     <div class="invalid-feedback">
-                        Vous devez accepter avant de continuer.
+                        Vous devez User avant de continuer.
                     </div>
                 </div>
             </div>

@@ -285,8 +285,8 @@ CREATE TABLE `Utilisateur` (
 
 INSERT INTO `Utilisateur` (`IDUser`, `Email`, `MDP`, `Nom`, `Prenom`, `photo`, `Statu`) VALUES
 (1, 'alice@example.com', 'password123', 'Alice', 'Smith', 'default.png', 'Admin'),
-(2, 'bob@example.com', 'password456', 'Bob', 'Brown', 'test.jpg', 'accepter'),
-(3, 'charlie@example.com', 'password789', 'Charlie', 'Davis', 'test.jpg', 'accepter');
+(2, 'bob@example.com', 'password456', 'Bob', 'Brown', 'test.jpg', 'User'),
+(3, 'charlie@example.com', 'password789', 'Charlie', 'Davis', 'test.jpg', 'User');
 
 --
 -- Indexes for dumped tables

@@ -164,7 +164,6 @@ $conn->close();
                             <option value="">Sélectionnez le statut</option>
                             <option value="En cours">En cours</option>
                             <option value="Terminé">Terminé</option>
-                            <option value="En attente">En attente</option>
                         </select>
                         <div class="invalid-feedback">Veuillez sélectionner le statut du projet.</div>
                     </div>

@@ -142,7 +142,7 @@ if (isset($_SESSION['user_id'])) {
                         <?php if (isset($_SESSION['admin_id'])): ?>
                             <a href="index.php" class="btn btn-light me-2">Admin</a>
                         <?php endif; ?>
-                        <?php if (isset($_SESSION['statu']) && ($_SESSION['statu'] === 'accepter' || $_SESSION['statu'] === 'Admin')): ?>
+                        <?php if (isset($_SESSION['statu']) && ($_SESSION['statu'] === 'User' || $_SESSION['statu'] === 'Admin')): ?>
                             <a href="Essayer_MNB.php" class="btn btn-light me-1">Essayer MNB</a>
                         <?php endif; ?>
                         <a href="compte.php" class="btn btn-outline-light ms-2">Compte</a>

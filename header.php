@@ -62,7 +62,7 @@
                         <?php if (isset($_SESSION['admin_id'])): ?>
                             <a href="dashboard.php" class="btn btn-light me-2">Admin</a>
                         <?php endif; ?>
-                        <?php if (isset($_SESSION['statu']) && ($_SESSION['statu'] === 'accepter' || $_SESSION['statu'] === 'Admin')): ?>
+                        <?php if (isset($_SESSION['statu']) && ($_SESSION['statu'] === 'User' || $_SESSION['statu'] === 'Admin')): ?>
                             <a href="Essayer_gate.php" class="btn btn-light me-1">Essayer Gate</a>
                         <?php endif; ?>
                         <a href="compte.php" class="btn btn-outline-light ms-2">Compte</a>
