@@ -60,13 +60,19 @@ function afficherProjetsEnCours($conn) {
             echo '<td>' . $row["descriptionProjet"] . '</td>';
             echo '<td>' . $row["Duree_projet"] . '</td>';
             echo '<td>' . $row["Statu"] . '</td>';
-            echo '<td>' . $row["budjet"] . '</td>';
+            echo '<td>' . $row["budget"] . '</td>';
             echo '<td>';
             echo '<form method="post" action="projet.php" style="display:inline-block;"><input type="hidden" name="projet_id" value="' . $row["IDProjet"] . '"><button type="submit" class="btn btn-info">Gérer</button></form>';
             echo '</td>';
             echo '<td>';
-            echo '<form method="post" action="" style="display:inline-block;"><input type="hidden" name="projet_id" value="' . $row["IDProjet"] . '"><button type="submit" name="modifier_projet" class="btn btn-warning">Modifier</button></form> ';
-            echo '<form method="post" action="" style="display:inline-block;"><input type="hidden" name="projet_id" value="' . $row["IDProjet"] . '"><button type="submit" name="supprimer_projet" class="btn btn-danger">Supprimer</button></form>';
+            echo '<form method="get" action="modifier_projet.php" style="display:inline-block; margin-right: 10px;">';
+            echo '<input type="hidden" name="id" value="' . $row["IDProjet"] . '">';
+            echo '<button type="submit" class="btn btn-warning">Modifier</button>';
+            echo '</form>';
+            echo '<form method="post" action="" style="display:inline-block;">';
+            echo '<input type="hidden" name="projet_id" value="' . $row["IDProjet"] . '">';
+            echo '<button type="submit" name="supprimer_projet" class="btn btn-danger">Supprimer</button>';
+            echo '</form>';
             echo '</td>';
             echo '</tr>';
         }
@@ -131,8 +137,8 @@ if (isset($_POST['modifier_projet'])) {
         echo '<label for="statu">Statut:</label>';
         echo '<input type="text" id="statu" name="statu" value="' . $row["Statu"] . '" required>';
         echo '<br>';
-        echo '<label for="budjet">Budget:</label>';
-        echo '<input type="number" id="budjet" name="budjet" value="' . $row["budjet"] . '" required>';
+        echo '<label for="budget">Budget:</label>';
+        echo '<input type="number" id="budget" name="budget" value="' . $row["budget"] . '" required>';
         echo '<br>';
         echo '<button type="submit" name="sauvegarder_projet">Sauvegarder</button>';
         echo '</form>';
@@ -146,9 +152,9 @@ if (isset($_POST['sauvegarder_projet'])) {
     $description = $_POST['description'];
     $duree_projet = $_POST['duree_projet'];
     $statu = $_POST['statu'];
-    $budjet = $_POST['budjet'];
+    $budget = $_POST['budget'];
 
-    $sql = "UPDATE Projet SET nomProjet='$nom_projet', Duree_projet='$duree_projet', descriptionProjet='$description', Statu='$statu', budjet='$budjet' WHERE IDProjet='$projet_id'";
+    $sql = "UPDATE Projet SET nomProjet='$nom_projet', Duree_projet='$duree_projet', descriptionProjet='$description', Statu='$statu', budget='$budget' WHERE IDProjet='$projet_id'";
     
     if ($conn->query($sql) === TRUE) {
         echo "<p>Projet modifié avec succès.</p>";
@@ -212,77 +218,9 @@ if (isset($_POST['supprimer_projet'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 </head>
 <body>
-    <div class="sidebar">
-        <div class="logo-details">
-            <a href="MNB.php" class="active">
-                <i class="bx bxl-c-plus-plus"></i>
-                <span class="logo_name">MNB</span>
-            </a>
-        </div>
-        <ul class="nav-links">
-            <li>
-                <a href="dashboard.php">
-                    <i class="bx bx-grid-alt"></i>
-                    <span class="links_name">Dashboard</span>
-                </a>
-            </li>
-            <li>
-                <a href="projet.php">
-                    <i class="bx bx-box"></i>
-                    <span class="links_name">Projet</span>
-                </a>
-            </li>
-            <li>
-                <a href="plan.php">
-                    <i class="bx bx-list-ul"></i>
-                    <span class="links_name">Plan</span>
-                </a>
-            </li>
-            <li>
-                <a href="indicateur.php">
-                    <i class="bx bx-pie-chart-alt-2"></i>
-                    <span class="links_name">Indicateur clés</span>
-                </a>
-            </li>
-            <li>
-                <a href="gestion_client.php" class="active">
-                    <i class="bx bx-grid-alt"></i>
-                    <span class="links_name">Gestion Client</span>
-                </a>
-            </li>
-            <li>
-                <a href="calendrier.php">
-                    <i class="bx bx-coin-stack"></i>
-                    <span class="links_name">Calendrier</span>
-                </a>
-            </li>
-            <li class="log_out">
-                <a href="logout.php">
-                    <i class="bx bx-log-out"></i>
-                    <span class="links_name">Déconnexion</span>
-                </a>
-            </li>
-        </ul>
-    </div>
+    <?php include('sidebar.php'); ?>
     <section class="home-section">
-        <nav>
-            <div class="sidebar-button">
-                <i class="bx bx-menu sidebarBtn"></i>
-                <span class="dashboard">Gestion Client</span>
-            </div>
-            <div class="search-box">
-                <input type="text" placeholder="Recherche..." />
-                <i class="bx bx-search"></i>
-            </div>
-            <div class="profile-details">
-                <?php if (!empty($user_info['photo'])): ?>
-                    <img src="pdp/<?php echo htmlspecialchars($user_info['photo']); ?>" alt="Profile Picture" class="rounded-circle" style="width: 30px; height: 30px; object-fit: cover;">
-                <?php endif; ?>
-                <span class="admin_name"><?php echo htmlspecialchars($user_info['Prenom'] . ' ' . $user_info['Nom']); ?></span>
-                <i class="bx bx-chevron-down"></i>
-            </div>
-        </nav>
-
+    <?php include('header_gestion.php'); ?>
         <div class="home-content">
             <div class="users-table">
                 <h2>Utilisateurs enregistrés</h2>

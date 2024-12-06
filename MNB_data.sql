@@ -226,14 +226,14 @@ CREATE TABLE `Projet` (
   `descriptionProjet` varchar(50) NOT NULL,
   `tachesprojets` varchar(50) NOT NULL,
   `Statu` varchar(50) NOT NULL,
-  `budjet` int(11) NOT NULL
+  `budget` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `Projet`
 --
 
-INSERT INTO `Projet` (`IDProjet`, `nomProjet`, `Duree_projet`, `descriptionProjet`, `tachesprojets`, `Statu`, `budjet`) VALUES
+INSERT INTO `Projet` (`IDProjet`, `nomProjet`, `Duree_projet`, `descriptionProjet`, `tachesprojets`, `Statu`, `budget`) VALUES
 (1, 'Projet Alpha', '6 mois', 'Développement de la plateforme Alpha', 'Tâche 1, Tâche 2', 'En cours', 10000),
 (2, 'Projet Beta', '3 mois', 'Mise à jour de la plateforme Beta', 'Tâche 3, Tâche 4', 'Terminé', 5000);
 
