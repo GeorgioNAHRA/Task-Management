@@ -32,13 +32,16 @@ function afficherUtilisateurs($conn) {
     $result = $conn->query($sql);
 
     if ($result->num_rows > 0) {
-        while($row = $result->fetch_assoc()) {
+        while ($row = $result->fetch_assoc()) {
             echo '<tr>';
             echo '<td>' . $row["IDUser"] . '</td>';
             echo '<td>' . $row["Nom"] . '</td>';
             echo '<td>' . $row["Prenom"] . '</td>';
             echo '<td>';
-            echo '<form method="post" action="" style="display:inline-block;"><input type="hidden" name="user_id" value="' . $row["IDUser"] . '"><button type="submit" name="delete" class="btn btn-danger">Supprimer</button></form>';
+            echo '<form method="post" action="" style="display:inline-block;">
+                    <input type="hidden" name="user_id" value="' . $row["IDUser"] . '">
+                    <button type="submit" name="delete" class="btn btn-danger">Supprimer</button>
+                  </form>';
             echo '</td>';
             echo '</tr>';
         }
@@ -53,7 +56,7 @@ function afficherProjetsEnCours($conn) {
     $result = $conn->query($sql);
 
     if ($result->num_rows > 0) {
-        while($row = $result->fetch_assoc()) {
+        while ($row = $result->fetch_assoc()) {
             echo '<tr>';
             echo '<td>' . $row["IDProjet"] . '</td>';
             echo '<td>' . $row["nomProjet"] . '</td>';
@@ -62,17 +65,20 @@ function afficherProjetsEnCours($conn) {
             echo '<td>' . $row["Statu"] . '</td>';
             echo '<td>' . $row["budget"] . '</td>';
             echo '<td>';
-            echo '<form method="post" action="projet.php" style="display:inline-block;"><input type="hidden" name="projet_id" value="' . $row["IDProjet"] . '"><button type="submit" class="btn btn-info">Gérer</button></form>';
+            echo '<form method="post" action="plan.php" style="display:inline-block;">
+                    <input type="hidden" name="id" value="' . $row["IDProjet"] . '">
+                    <button type="submit" class="btn btn-info">Gérer</button>
+                  </form>';
             echo '</td>';
             echo '<td>';
-            echo '<form method="get" action="modifier_projet.php" style="display:inline-block; margin-right: 10px;">';
-            echo '<input type="hidden" name="id" value="' . $row["IDProjet"] . '">';
-            echo '<button type="submit" class="btn btn-warning">Modifier</button>';
-            echo '</form>';
-            echo '<form method="post" action="" style="display:inline-block;">';
-            echo '<input type="hidden" name="projet_id" value="' . $row["IDProjet"] . '">';
-            echo '<button type="submit" name="supprimer_projet" class="btn btn-danger">Supprimer</button>';
-            echo '</form>';
+            echo '<form method="get" action="modifier_projet.php" style="display:inline-block; margin-right: 10px;">
+                    <input type="hidden" name="id" value="' . $row["IDProjet"] . '">
+                    <button type="submit" class="btn btn-warning">Modifier</button>
+                  </form>';
+            echo '<form method="post" action="" style="display:inline-block;">
+                    <input type="hidden" name="projet_id" value="' . $row["IDProjet"] . '">
+                    <button type="submit" name="supprimer_projet" class="btn btn-danger">Supprimer</button>
+                  </form>';
             echo '</td>';
             echo '</tr>';
         }
@@ -211,30 +217,33 @@ if (isset($_POST['supprimer_projet'])) {
 <html lang="fr" dir="ltr">
 <head>
     <meta charset="UTF-8" />
-    <title>Admin Dashboard</title>
+    <title>Gestion des Projets</title>
     <link rel="stylesheet" href="dashboard.css" />
-    <!-- Boxicons CDN Link -->
     <link href="https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css" rel="stylesheet" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 </head>
 <body>
     <?php include('sidebar.php'); ?>
     <section class="home-section">
-    <?php include('header_gestion.php'); ?>
+        <?php include('header_gestion.php'); ?>
         <div class="home-content">
-            <div class="users-table">
-                <h2>Utilisateurs enregistrés</h2>
+            <div class="projects-table">
+                <h2>Projets en cours</h2>
                 <table>
                     <thead>
                         <tr>
                             <th>ID</th>
                             <th>Nom</th>
-                            <th>Prénom</th>
+                            <th>Description</th>
+                            <th>Durée</th>
+                            <th>Statut</th>
+                            <th>Budget</th>
+                            <th>Gérer</th>
                             <th>Action</th>
                         </tr>
                     </thead>
-                    <tbody id="registered-users">
-                        <?php afficherUtilisateurs($conn); ?>
+                    <tbody id="ongoing-projects">
+                        <?php afficherProjetsEnCours($conn); ?>
                     </tbody>
                 </table>
             </div>

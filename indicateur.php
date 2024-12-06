@@ -28,23 +28,7 @@ $user_info = [
 <body>
     <?php include('sidebar.php'); ?>
     <section class="home-section">
-        <nav>
-            <div class="sidebar-button">
-                <i class="bx bx-menu sidebarBtn"></i>
-                <span class="dashboard">Indicateur clés</span>
-            </div>
-            <div class="search-box">
-                <input type="text" placeholder="Recherche..." />
-                <i class="bx bx-search"></i>
-            </div>
-            <div class="profile-details">
-                <?php if (!empty($user_info['photo'])): ?>
-                    <img src="pdp/<?php echo htmlspecialchars($user_info['photo']); ?>" alt="Profile Picture" class="rounded-circle" style="width: 30px; height: 30px; object-fit: cover;">
-                <?php endif; ?>
-                <span class="admin_name"><?php echo htmlspecialchars($user_info['Prenom'] . ' ' . $user_info['Nom']); ?></span>
-                <i class="bx bx-chevron-down"></i>
-            </div>
-        </nav>
+    <?php include('header_gestion.php'); ?>
         <!-- Section pour afficher les indicateurs clés -->
         <div class="key-indicators">
             <div>

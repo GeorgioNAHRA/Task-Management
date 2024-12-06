@@ -1,7 +1,7 @@
 <nav>
     <div class="sidebar-button">
         <i class="bx bx-menu sidebarBtn"></i>
-        <span class="dashboard">Gestion Client</span> <!-- Modifiez le texte ici si nécessaire pour chaque page -->
+        <span class="dashboard">Pannel</span>
     </div>
     <div class="search-box">
         <input type="text" placeholder="Recherche..." />

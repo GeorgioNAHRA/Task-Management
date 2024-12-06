@@ -15,13 +15,7 @@
         <li>
             <a href="projet.php">
                 <i class="bx bx-box"></i>
-                <span class="links_name">Projet</span>
-            </a>
-        </li>
-        <li>
-            <a href="plan.php">
-                <i class="bx bx-list-ul"></i>
-                <span class="links_name">Plan</span>
+                <span class="links_name">Création Projet</span>
             </a>
         </li>
         <li>
@@ -32,8 +26,14 @@
         </li>
         <li>
             <a href="gestion_client.php">
-                <i class="bx bx-grid-alt"></i>
-                <span class="links_name">Gestion Client</span>
+                <i class="bx bx-user"></i>
+                <span class="links_name">Gestion Clients</span>
+            </a>
+        </li>
+        <li>
+            <a href="gestion_projet.php">
+                <i class="bx bx-task"></i>
+                <span class="links_name">Gestion Projets</span>
             </a>
         </li>
         <li class="log_out">
