@@ -2,292 +2,365 @@
 session_start();
 include('db.php');
 
-// Check if the user is logged in and has the 'Admin' status
+// Vérification de l'authentification et des privilèges d'admin
 if (!isset($_SESSION['user_id']) || $_SESSION['statu'] !== 'Admin') {
     echo "Erreur : Vous n'êtes pas autorisé à accéder à cette page.";
     exit();
 }
 
+// Informations de l'utilisateur connecté
 $user_info = [
     'Prenom' => $_SESSION['prenom'],
     'Nom' => $_SESSION['nom'],
     'photo' => $_SESSION['photo']
 ];
 
+// Connexion à la base de données
 $servername = "localhost";
 $username = "root";
 $password = "";
 $dbname = "MNB_data";
 
-// Connexion à la base de données
 $conn = new mysqli($servername, $username, $password, $dbname);
-
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Ajouter une tâche
+// Initialisation
+$projet = null;
+$taches = [];
+$message = '';
+$upload_dir = __DIR__ . '/files';
+
+// Crée le dossier /files s'il n'existe pas
+if (!is_dir($upload_dir)) {
+    mkdir($upload_dir, 0777, true);
+}
+
+// Récupération des informations du projet
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id_projet'])) {
+    $id_projet = $_POST['id_projet'];
+    $_SESSION['id_projet'] = $id_projet;
+} elseif (isset($_SESSION['id_projet'])) {
+    $id_projet = $_SESSION['id_projet'];
+} else {
+    echo "<p>Erreur : Aucun projet sélectionné.</p>";
+    exit();
+}
+
+// Récupérer les détails du projet
+$projet = $conn->query("SELECT * FROM Projet WHERE IDProjet = '$id_projet'")->fetch_assoc();
+if (!$projet) {
+    echo "<p>Erreur : Projet introuvable.</p>";
+    exit();
+}
+
+// Utilisateurs associés au projet
+$project_users = explode(',', $projet['IDUsers']);
+$users = $conn->query("SELECT * FROM Utilisateur");
+$taches = $conn->query("SELECT * FROM Tache WHERE IDProjet = '$id_projet'");
+
+// Mettre à jour les utilisateurs associés
+if (isset($_POST['update_users'])) {
+    $selected_users = isset($_POST['project_users']) ? $_POST['project_users'] : [];
+    $updated_users = implode(',', $selected_users);
+
+    $conn->query("UPDATE Projet SET IDUsers = '$updated_users' WHERE IDProjet = '$id_projet'");
+    $message = "Utilisateurs associés au projet mis à jour.";
+    echo "<script>location.reload();</script>";
+}
+
+// Ajouter une nouvelle tâche
 if (isset($_POST['add_task'])) {
-    $taskName = $_POST['new-task'];
-    $taskDeadline = $_POST['new-task-deadline'];
-    $projectId = isset($_POST['IDProjet']) ? $_POST['IDProjet'] : null;
-    $userId = isset($_POST['IDUser']) ? $_POST['IDUser'] : null;
+    $task_name = $_POST['task_name'];
+    $task_description = $_POST['task_description'];
+    $task_start = $_POST['task_start'];
+    $task_deadline = $_POST['task_deadline'];
+    $task_users = isset($_POST['task_users']) ? implode(',', $_POST['task_users']) : '';
 
-    if ($projectId && $userId) {
-        $sql = "INSERT INTO Tache (Titre, datefin, IDProjet_avoir, IDUser) VALUES ('$taskName', '$taskDeadline', '$projectId', '$userId')";
-        if ($conn->query($sql) === TRUE) {
-            echo "<p>Tâche ajoutée avec succès.</p>";
-        } else {
-            echo "<p>Erreur lors de l'ajout de la tâche: " . $conn->error . "</p>";
-        }
+    $conn->query("INSERT INTO Tache (Titre, description, datedebut, datefin, IDUser, IDProjet) VALUES ('$task_name', '$task_description', '$task_start', '$task_deadline', '$task_users', '$id_projet')");
+    $message = "Nouvelle tâche ajoutée avec succès.";
+    echo "<script>location.reload();</script>";
+}
+
+// Modifier une tâche existante
+if (isset($_POST['edit_task'])) {
+    $task_id = $_POST['task_id'];
+    $task_name = $_POST['task_name'];
+    $task_description = $_POST['task_description'];
+    $task_start = $_POST['task_start'];
+    $task_deadline = $_POST['task_deadline'];
+    $task_users = isset($_POST['task_users']) ? implode(',', $_POST['task_users']) : '';
+
+    $conn->query("UPDATE Tache SET Titre = '$task_name', description = '$task_description', datedebut = '$task_start', datefin = '$task_deadline', IDUser = '$task_users' WHERE IDTache = '$task_id'");
+    $message = "Tâche modifiée avec succès.";
+    echo "<script>location.reload();</script>";
+}
+
+// Gestion des fichiers : Ajouter un fichier
+if (isset($_FILES['file'])) {
+    $file_name = $_FILES['file']['name'];
+    $file_tmp = $_FILES['file']['tmp_name'];
+    $file_path = $upload_dir . '/' . basename($file_name);
+
+    if (move_uploaded_file($file_tmp, $file_path)) {
+        $conn->query("INSERT INTO Files (FileName, FilePath, UploadedBy, IDProjet) VALUES ('$file_name', '$file_path', '{$_SESSION['user_id']}', '$id_projet')");
+        $message = "Fichier uploadé avec succès.";
+        echo "<script>location.reload();</script>";
     } else {
-        echo "<p>Erreur: Aucun projet ou utilisateur sélectionné.</p>";
+        $message = "Erreur lors de l'upload du fichier.";
     }
 }
 
-// Supprimer une tâche
-if (isset($_POST['delete_task'])) {
-    $taskId = $_POST['task_id'];
-
-    $sql = "DELETE FROM faire WHERE IDTache='$taskId'";
-    if ($conn->query($sql) === TRUE) {
-        $sql = "DELETE FROM commentaire WHERE IDTache_contenir2='$taskId'";
-        if ($conn->query($sql) === TRUE) {
-            $sql = "DELETE FROM Tache WHERE IDTache='$taskId'";
-            if ($conn->query($sql) === TRUE) {
-                echo "<p>Tâche supprimée avec succès.</p>";
-            } else {
-                echo "<p>Erreur lors de la suppression de la tâche: " . $conn->error . "</p>";
-            }
-        } else {
-            echo "<p>Erreur lors de la suppression des commentaires: " . $conn->error . "</p>";
-        }
-    } else {
-        echo "<p>Erreur lors de la suppression des enregistrements dans faire: " . $conn->error . "</p>";
+// Suppression d'un fichier
+if (isset($_POST['delete_file'])) {
+    $file_id = $_POST['file_id'];
+    $file_data = $conn->query("SELECT * FROM Files WHERE IDFile = '$file_id'")->fetch_assoc();
+    if ($file_data) {
+        unlink($file_data['FilePath']);
+        $conn->query("DELETE FROM Files WHERE IDFile = '$file_id'");
+        $message = "Fichier supprimé avec succès.";
+        echo "<script>location.reload();</script>";
     }
 }
 
-// Ajouter un participant
-if (isset($_POST['add_participant'])) {
-    $participantName = $_POST['new-participant-name'];
-    $participantRole = $_POST['new-participant-role'];
-    $equipeId = $_POST['equipe-id'];
-
-    $sql = "SELECT IDUser FROM Utilisateur WHERE Nom='$participantName'";
-    $result = $conn->query($sql);
-    if ($result->num_rows > 0) {
-        $row = $result->fetch_assoc();
-        $userId = $row['IDUser'];
-        $sql = "INSERT INTO membreequipe (IDUser, roles, IDequipe) VALUES ('$userId', '$participantRole', '$equipeId')";
-        if ($conn->query($sql) === TRUE) {
-            echo "<p>Participant ajouté avec succès.</p>";
-        } else {
-            echo "<p>Erreur lors de l'ajout du participant: " . $conn->error . "</p>";
-        }
-    } else {
-        echo "<p>Utilisateur non trouvé.</p>";
-    }
-}
-
-// Ajouter une équipe
-if (isset($_POST['add_team'])) {
-    $teamName = $_POST['new-team-name'];
-
-    $sql = "INSERT INTO equipe (roles, IDUser) VALUES ('$teamName', 1)";
-    if ($conn->query($sql) === TRUE) {
-        echo "<p>Équipe créée avec succès.</p>";
-    } else {
-        echo "<p>Erreur lors de la création de l'équipe: " . $conn->error . "</p>";
-    }
-}
-
-// Fonctions pour afficher les listes
-function afficherTaches($conn) {
-    $sql = "SELECT * FROM Tache";
-    $result = $conn->query($sql);
-
-    if ($result->num_rows > 0) {
-        echo '<div class="task-header"><span>Tâche</span><span>Date Limite</span><span>Actions</span></div>';
-        while($row = $result->fetch_assoc()) {
-            echo '<div class="task">';
-            echo '<span class="task-name">' . $row["Titre"] . '</span>';
-            echo '<span class="task-deadline">' . $row["datefin"] . '</span>';
-            echo '<form method="post" action="" style="display:inline;">';
-            echo '<input type="hidden" name="task_id" value="' . $row["IDTache"] . '">';
-            echo '<button type="submit" name="delete_task">Supprimer</button>';
-            echo '</form>';
-            echo '</div>';
-        }
-    } else {
-        echo "<p>Aucune tâche à afficher.</p>";
-    }
-}
-
-function afficherParticipants($conn) {
-    $sql = "SELECT U.Nom, U.Prenom, M.roles FROM Utilisateur U INNER JOIN membreequipe M ON U.IDUser = M.IDUser";
-    $result = $conn->query($sql);
-
-    if ($result->num_rows > 0) {
-        echo '<div class="participant-header"><span>Nom</span><span>Rôle</span></div>';
-        while($row = $result->fetch_assoc()) {
-            echo '<div class="participant">';
-            echo '<span class="participant-name">' . $row["Nom"] . ' ' . $row["Prenom"] . '</span>';
-            echo '<span class="participant-role">' . $row["roles"] . '</span>';
-            echo '</div>';
-        }
-    } else {
-        echo "<p>Aucun participant à afficher.</p>";
-    }
-}
-
-function afficherEquipes($conn) {
-    $sql = "SELECT * FROM equipe";
-    $result = $conn->query($sql);
-
-    if ($result->num_rows > 0) {
-        echo '<div class="team-header"><span>Équipe</span><span>Actions</span></div>';
-        while($row = $result->fetch_assoc()) {
-            echo '<div class="team">';
-            echo '<span class="team-name">' . $row["roles"] . '</span>';
-            echo '<form method="post" action="" style="display:inline;">';
-            echo '<input type="hidden" name="team_id" value="' . $row["Idequipe"] . '">';
-            echo '<button type="submit" name="delete_team">Supprimer</button>';
-            echo '</form>';
-            echo '</div>';
-        }
-    } else {
-        echo "<p>Aucune équipe à afficher.</p>";
-    }
-}
-
-// Supprimer une équipe
-if (isset($_POST['delete_team'])) {
-    $teamId = $_POST['team_id'];
-    $sql = "DELETE FROM equipe WHERE Idequipe='$teamId'";
-    if ($conn->query($sql) === TRUE) {
-        echo "<p>Équipe supprimée avec succès.</p>";
-    } else {
-        echo "<p>Erreur lors de la suppression de l'équipe: " . $conn->error . "</p>";
-    }
-}
+// Récupération des fichiers liés au projet
+$files = $conn->query("SELECT * FROM Files WHERE IDProjet = '$id_projet'");
 ?>
 
 <!DOCTYPE html>
 <html lang="fr" dir="ltr">
 <head>
     <meta charset="UTF-8" />
-    <title>Admin Dashboard</title>
+    <title>Nom du Projet</title>
     <link rel="stylesheet" href="dashboard.css" />
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />
     <link href="https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css" rel="stylesheet" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+        .file-upload {
+            border: 2px dashed #ccc;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            margin-top: 20px;
+        }
+        .file-upload.dragover {
+            border-color: #0e98e6;
+            background-color: #f1f9ff;
+        }
+    </style>
 </head>
 <body>
     <?php include('sidebar.php'); ?>
     <section class="home-section">
-    <?php include('header_gestion.php'); ?>
-        <div class="project-management">
-            <h2>Gestion de Projet</h2>
-            <div class="task-list">
-                <?php afficherTaches($conn); ?>
-            </div>
-            <div class="task-actions">
+        <?php include('header_gestion.php'); ?>
+        <div class="home-content">
+            <div class="project-details">
+                <h2><strong>Nom du Projet :</strong> <?= htmlspecialchars($projet['nomProjet']) ?></h2>
+                <br>
+
+                <!-- Afficher les messages -->
+                <?php if ($message): ?>
+                    <div class="alert alert-success">
+                        <?= htmlspecialchars($message) ?>
+                    </div>
+                <?php endif; ?>
+
+                <!-- Gestion des utilisateurs associés -->
+                <h3>Gestion des utilisateurs associés</h3>
                 <form method="post" action="">
-                    <input type="text" id="new-task" name="new-task" placeholder="Nouvelle tâche..." />
-                    <input type="date" id="new-task-deadline" name="new-task-deadline" />
-                    <select name="IDProjet">
-                        <?php
-                        $sql = "SELECT IDProjet, nomProjet FROM Projet";
-                        $result = $conn->query($sql);
-                        while ($row = $result->fetch_assoc()) {
-                            echo '<option value="' . $row["IDProjet"] . '">' . $row["nomProjet"] . '</option>';
-                        }
-                        ?>
-                    </select>
-                    <select name="IDUser">
-                        <?php
-                        $sql = "SELECT IDUser, Nom FROM Utilisateur";
-                        $result = $conn->query($sql);
-                        while ($row = $result->fetch_assoc()) {
-                            echo '<option value="' . $row["IDUser"] . '">' . $row["Nom"] . '</option>';
-                        }
-                        ?>
-                    </select>
-                    <button type="submit" name="add_task">Ajouter Tâche</button>
+                    <div class="form-group">
+                        <label for="project_users">Utilisateurs disponibles :</label>
+                        <div>
+                            <?php while ($user = $users->fetch_assoc()): ?>
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" id="user_<?= $user['IDUser'] ?>" name="project_users[]" value="<?= $user['IDUser'] ?>"
+                                    <?= in_array($user['IDUser'], $project_users) ? 'checked' : '' ?>>
+                                    <label class="form-check-label" for="user_<?= $user['IDUser'] ?>">
+                                        <?= htmlspecialchars($user['Prenom'] . " " . $user['Nom']) ?>
+                                    </label>
+                                </div>
+                            <?php endwhile; ?>
+                        </div>
+                    </div>
+                    <button type="submit" name="update_users" class="btn btn-primary">Mettre à jour</button>
                 </form>
-            </div>
-        </div>
-        <div class="project-participants">
-            <h2>Participants du Projet</h2>
-            <div class="participant-list">
-                <?php afficherParticipants($conn); ?>
-            </div>
-            <div class="participant-actions">
+                <br>
+
+                <!-- Gestion des tâches -->
+                <h3>Gestion des Tâches</h3>
                 <form method="post" action="">
-                    <input type="text" id="new-participant-name" name="new-participant-name" placeholder="Nom du participant..." />
-                    <input type="text" id="new-participant-role" name="new-participant-role" placeholder="Rôle du participant..." />
-                    <select name="equipe-id">
-                        <?php
-                        $sql = "SELECT Idequipe, roles FROM equipe";
-                        $result = $conn->query($sql);
-                        while ($row = $result->fetch_assoc()) {
-                            echo '<option value="' . $row["Idequipe"] . '">' . $row["roles"] . '</option>';
-                        }
-                        ?>
-                    </select>
-                    <button type="submit" name="add_participant">Ajouter Participant</button>
+                    <h4>Ajouter une nouvelle tâche</h4>
+                    <div class="form-group">
+                        <label for="task_name">Nom de la tâche :</label>
+                        <input type="text" id="task_name" name="task_name" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="task_description">Description :</label>
+                        <textarea id="task_description" name="task_description" class="form-control" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="task_start">Date de début :</label>
+                        <input type="date" id="task_start" name="task_start" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="task_deadline">Date limite :</label>
+                        <input type="date" id="task_deadline" name="task_deadline" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="task_users">Utilisateurs associés :</label>
+                        <div>
+                            <?php foreach ($project_users as $user_id): ?>
+                                <?php $user_data = $conn->query("SELECT * FROM Utilisateur WHERE IDUser = '$user_id'")->fetch_assoc(); ?>
+                                <?php if ($user_data): ?>
+                                    <div class="form-check">
+                                        <input type="checkbox" class="form-check-input" id="task_user_<?= $user_data['IDUser'] ?>" name="task_users[]" value="<?= $user_data['IDUser'] ?>">
+                                        <label class="form-check-label" for="task_user_<?= $user_data['IDUser'] ?>">
+                                            <?= htmlspecialchars($user_data['Prenom'] . " " . $user_data['Nom']) ?>
+                                        </label>
+                                    </div>
+                                <?php endif; ?>
+                            <?php endforeach; ?>
+                        </div>
+                    </div>
+                    <button type="submit" name="add_task" class="btn btn-success">Ajouter</button>
                 </form>
-            </div>
-        </div>
-        <div class="project-teams">
-            <h2>Création et Gestion des Équipes</h2>
-            <div class="team-list">
-                <?php afficherEquipes($conn); ?>
-            </div>
-            <div class="team-actions">
-                <form method="post" action="">
-                    <input type="text" id="new-team-name" name="new-team-name" placeholder="Nom de l'équipe..." />
-                    <button type="submit" name="add_team">Créer Équipe</button>
+                <br>
+
+                <!-- Tâches existantes -->
+                <h4>Tâches existantes</h4>
+                <?php if ($taches->num_rows > 0): ?>
+                    <?php while ($tache = $taches->fetch_assoc()): ?>
+                        <form method="post" action="">
+                            <input type="hidden" name="task_id" value="<?= $tache['IDTache'] ?>">
+                            <div class="form-group">
+                                <label>Nom :</label>
+                                <input type="text" name="task_name" value="<?= htmlspecialchars($tache['Titre']) ?>" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Description :</label>
+                                <textarea name="task_description" class="form-control" required><?= htmlspecialchars($tache['description']) ?></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label>Date de début :</label>
+                                <input type="date" name="task_start" value="<?= htmlspecialchars($tache['datedebut']) ?>" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Date limite :</label>
+                                <input type="date" name="task_deadline" value="<?= htmlspecialchars($tache['datefin']) ?>" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Utilisateurs associés :</label>
+                                <div>
+                                    <?php foreach ($project_users as $user_id): ?>
+                                        <?php $user_data = $conn->query("SELECT * FROM Utilisateur WHERE IDUser = '$user_id'")->fetch_assoc(); ?>
+                                        <?php if ($user_data): ?>
+                                            <div class="form-check">
+                                                <input type="checkbox" class="form-check-input" id="edit_task_user_<?= $user_data['IDUser'] ?>" name="task_users[]" value="<?= $user_data['IDUser'] ?>" <?= in_array($user_data['IDUser'], explode(',', $tache['IDUser'])) ? 'checked' : '' ?>>
+                                                <label class="form-check-label" for="edit_task_user_<?= $user_data['IDUser'] ?>">
+                                                    <?= htmlspecialchars($user_data['Prenom'] . " " . $user_data['Nom']) ?>
+                                                </label>
+                                            </div>
+                                        <?php endif; ?>
+                                    <?php endforeach; ?>
+                                </div>
+                            </div>
+                            <button type="submit" name="edit_task" class="btn btn-warning">Modifier</button>
+                        </form>
+                        <hr>
+                    <?php endwhile; ?>
+                <?php else: ?>
+                    <p>Aucune tâche associée.</p>
+                <?php endif; ?>
+
+                <!-- Section des fichiers -->
+                <h4>Fichiers associés</h4>
+                <form id="file-upload-form" enctype="multipart/form-data" method="post">
+                    <div id="file-upload-area" class="file-upload">
+                        Glissez et déposez vos fichiers ici, ou cliquez pour sélectionner.
+                        <input type="file" id="file-input" name="file" style="display: none;">
+                    </div>
+                    <button type="submit" class="btn btn-primary mt-3">Uploader</button>
                 </form>
+
+                <h4 class="mt-4">Fichiers existants</h4>
+                <?php if ($files->num_rows > 0): ?>
+                    <ul>
+                        <?php while ($file = $files->fetch_assoc()): ?>
+                            <li>
+                                <a href="<?= htmlspecialchars($file['FilePath']) ?>" download>
+                                    <?= htmlspecialchars($file['FileName']) ?>
+                                </a>
+                                <form method="post" action="" style="display: inline;">
+                                    <input type="hidden" name="file_id" value="<?= $file['IDFile'] ?>">
+                                    <button type="submit" name="delete_file" class="btn btn-danger btn-sm">Supprimer</button>
+                                </form>
+                            </li>
+                        <?php endwhile; ?>
+                    </ul>
+                <?php else: ?>
+                    <p>Aucun fichier associé.</p>
+                <?php endif; ?>
             </div>
         </div>
     </section>
-    <style>
-        .project-management, .project-participants, .project-teams {
-            padding: 80px;
-            margin-bottom: 10px;
+
+    <script>
+        // Drag-and-drop file upload
+        const uploadArea = document.getElementById('file-upload-area');
+        const fileInput = document.getElementById('file-input');
+
+        uploadArea.addEventListener('click', () => fileInput.click());
+
+        fileInput.addEventListener('change', () => {
+            const form = document.getElementById('file-upload-form');
+            form.submit();
+        });
+
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
+        });
+
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            fileInput.files = e.dataTransfer.files;
+            const form = document.getElementById('file-upload-form');
+            form.submit();
+        });
+    </script>
+        </section>
+            <style>
+        .home-content {
+            padding: 20px;
         }
-        .task-list, .participant-list, .team-list {
-            margin-bottom: 20px;
+        .project-details {
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
         }
-        .task-header, .participant-header, .team-header {
-            display: flex;
-            justify-content: space-between;
+        .project-details h2, .project-details h3 {
+            margin-bottom: 15px;
+        }
+        .project-details ul {
+            list-style-type: disc;
+            margin-left: 20px;
+        }
+        .project-details h2 {
+            font-weight: normal;
+        }
+        .project-details h2 strong {
             font-weight: bold;
-            padding: 10px;
-            border-bottom: 1px solid #ccc;
-        }
-        .task, .participant, .team {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 10px;
-            border: 1px solid #ccc;
-            margin-bottom: 5px;
-        }
-        .task .task-name.done {
-            text-decoration: line-through;
-        }
-        .task-actions, .participant-actions, .team-actions {
-            display: flex;
-            gap: 10px;
-        }
-        .task-actions input, .participant-actions input, .team-actions input, .task-actions button, .participant-actions button, .team-actions button {
-            padding: 10px;
-            font-size: 16px;
         }
     </style>
 </body>
 </html>
-<?php
-$conn->close();
-?>
+
+<?php $conn->close(); ?>

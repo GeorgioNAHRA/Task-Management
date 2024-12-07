@@ -65,20 +65,28 @@ function afficherProjetsEnCours($conn) {
             echo '<td>' . $row["Statu"] . '</td>';
             echo '<td>' . $row["budget"] . '</td>';
             echo '<td>';
+            
+            // Bouton "Gérer" modifié pour passer l'IDProjet et gérer dans plan.php
             echo '<form method="post" action="plan.php" style="display:inline-block;">
-                    <input type="hidden" name="id" value="' . $row["IDProjet"] . '">
+                    <input type="hidden" name="id_projet" value="' . $row["IDProjet"] . '">
                     <button type="submit" class="btn btn-info">Gérer</button>
                   </form>';
+
             echo '</td>';
             echo '<td>';
+
+            // Bouton "Modifier"
             echo '<form method="get" action="modifier_projet.php" style="display:inline-block; margin-right: 10px;">
                     <input type="hidden" name="id" value="' . $row["IDProjet"] . '">
                     <button type="submit" class="btn btn-warning">Modifier</button>
                   </form>';
+
+            // Bouton "Supprimer"
             echo '<form method="post" action="" style="display:inline-block;">
                     <input type="hidden" name="projet_id" value="' . $row["IDProjet"] . '">
                     <button type="submit" name="supprimer_projet" class="btn btn-danger">Supprimer</button>
                   </form>';
+
             echo '</td>';
             echo '</tr>';
         }
