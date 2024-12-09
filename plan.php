@@ -138,6 +138,15 @@ if (isset($_POST['delete_file'])) {
 
 // Récupération des fichiers liés au projet
 $files = $conn->query("SELECT * FROM Files WHERE IDProjet = '$id_projet'");
+
+// Gestion de la chatbox : Ajouter un message
+if ($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_POST['chat_message'])) {
+    $chat_message = $conn->real_escape_string($_POST['chat_message']);
+    $user_id = $_SESSION['user_id'];
+
+    $conn->query("INSERT INTO ChatMessages (IDUser, IDProjet, Message, Date) VALUES ('$user_id', '$id_projet', '$chat_message', NOW())");
+    echo "<script>location.reload();</script>";
+}
 ?>
 
 <!DOCTYPE html>
@@ -319,6 +328,39 @@ $files = $conn->query("SELECT * FROM Files WHERE IDProjet = '$id_projet'");
                 <?php else: ?>
                     <p>Aucun fichier associé.</p>
                 <?php endif; ?>
+                <!-- Section de la chatbox -->
+                <h4>Chatbox</h4>
+                <div class="chatbox-container">
+                    <div class="chat-messages">
+                        <?php
+                        $chatMessages = $conn->query("SELECT cm.*, u.Prenom, u.Nom 
+                                                      FROM ChatMessages cm 
+                                                      JOIN Utilisateur u ON u.IDUser = cm.IDUser 
+                                                      WHERE cm.IDProjet = '$id_projet' 
+                                                      ORDER BY cm.Date ASC");
+
+                        if ($chatMessages->num_rows > 0):
+                            while ($message = $chatMessages->fetch_assoc()):
+                        ?>
+                            <div class="message">
+                                <span class="date"><?= htmlspecialchars($message['Date']) ?></span>
+                                <strong class="username"><?= htmlspecialchars($message['Prenom'] . ' ' . $message['Nom']) ?>:</strong>
+                                <span class="text"><?= htmlspecialchars($message['Message']) ?></span>
+                            </div>
+                        <?php
+                            endwhile;
+                        else:
+                        ?>
+                            <p>Aucun message pour le moment.</p>
+                        <?php endif; ?>
+                    </div>
+                    <form method="post" action="">
+                        <div class="form-group">
+                            <textarea name="chat_message" class="form-control" placeholder="Entrez votre message..." required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Envoyer</button>
+                    </form>
+                </div>
             </div>
         </div>
     </section>
