@@ -170,7 +170,6 @@ if (isset($_SESSION['user_id'])) {
 
 
     <!-- Footer -->
-    <footer class="bg-dark text-white py-5">
     <?php
     include('footer.php');
     ?>
