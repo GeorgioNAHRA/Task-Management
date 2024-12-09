@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Dec 07, 2024 at 04:39 PM
+-- Generation Time: Dec 09, 2024 at 07:21 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -20,6 +20,28 @@ SET time_zone = "+00:00";
 --
 -- Database: `mnb_data`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `ChatMessages`
+--
+
+CREATE TABLE `ChatMessages` (
+  `IDMessage` int(11) NOT NULL,
+  `IDUser` varchar(255) NOT NULL,
+  `IDProjet` int(11) NOT NULL,
+  `Message` text NOT NULL,
+  `Date` datetime DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `ChatMessages`
+--
+
+INSERT INTO `ChatMessages` (`IDMessage`, `IDUser`, `IDProjet`, `Message`, `Date`) VALUES
+(1, '1', 17, 'test', '2024-12-09 17:41:06'),
+(2, '10', 17, 'wee', '2024-12-09 17:44:42');
 
 -- --------------------------------------------------------
 
@@ -60,8 +82,8 @@ CREATE TABLE `Projet` (
 INSERT INTO `Projet` (`IDProjet`, `nomProjet`, `Duree_projet`, `descriptionProjet`, `IDTache`, `Statu`, `budget`, `IDUsers`) VALUES
 (1, 'Projet Alpha', '6 mois', 'Développement de la plateforme Alpha', NULL, 'En cours', 10000, NULL),
 (2, 'Projet Beta', '3 mois', 'Mise à jour de la plateforme Beta', NULL, 'Terminé', 5000, NULL),
-(14, 'TestLOL', '12', 'LOL', NULL, 'En cours', 10000, '1,2'),
-(15, 'test', '111', 'sss', NULL, 'En cours', 11, '2,9');
+(16, 'Test', '1000', 'Bobdsssss', NULL, 'En cours', 12, '2'),
+(17, 'ntm', '12', 'ta mere ', NULL, 'En cours', 200, '1,2,10');
 
 -- --------------------------------------------------------
 
@@ -84,7 +106,9 @@ CREATE TABLE `Tache` (
 --
 
 INSERT INTO `Tache` (`IDTache`, `Titre`, `description`, `datedebut`, `datefin`, `IDUser`, `IDProjet`) VALUES
-(61663, 'dsd', 'sd', '2024-12-11', '2024-12-25', '9', 15);
+(61663, 'dsd', 'sd', '2024-12-11', '2024-12-25', '9', 15),
+(61664, 'georgio', 'ntm gpt', '2024-12-17', '2024-12-19', '1', 17),
+(61665, 'ss', 'seeds', '2024-12-10', '2024-12-12', '2', 16);
 
 -- --------------------------------------------------------
 
@@ -107,14 +131,18 @@ CREATE TABLE `Utilisateur` (
 --
 
 INSERT INTO `Utilisateur` (`IDUser`, `Email`, `MDP`, `Nom`, `Prenom`, `photo`, `Statu`) VALUES
-(1, 'alice@example.com', 'password123', 'Alice', 'Smith', '675031c1f36e5_147568.jpg', 'Admin'),
-(2, 'bob@example.com', 'password456', 'Bob', 'Brown', 'test.jpg', 'User'),
-(3, 'charlie@example.com', 'password789', 'Charlie', 'Davis', 'test.jpg', 'User'),
-(9, 'qq@gmail.com', 'q', 'Q', 'q', '67502f4ed4e6b_147568.jpg', 'User');
+(1, 'alice@example.com', '$2y$10$l64frc2UI1tOD.uJwGxubucfGiV3W8la627GMBUoF3Sh/SYRHde3C', 'Alice', 'Smith', '675031c1f36e5_147568.jpg', 'Admin'),
+(10, 'lucie.lopez@gmail.com', '$2y$10$fNxYFk0IK8X66oZSvV2SqODAiNQmrJeIw2xxTamV5tjFB/DCFHwwC', 'Lucie', 'Lopez', 'default.png', 'User');
 
 --
 -- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `ChatMessages`
+--
+ALTER TABLE `ChatMessages`
+  ADD PRIMARY KEY (`IDMessage`);
 
 --
 -- Indexes for table `Files`
@@ -148,6 +176,12 @@ ALTER TABLE `Utilisateur`
 --
 
 --
+-- AUTO_INCREMENT for table `ChatMessages`
+--
+ALTER TABLE `ChatMessages`
+  MODIFY `IDMessage` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
 -- AUTO_INCREMENT for table `Files`
 --
 ALTER TABLE `Files`
@@ -157,19 +191,19 @@ ALTER TABLE `Files`
 -- AUTO_INCREMENT for table `Projet`
 --
 ALTER TABLE `Projet`
-  MODIFY `IDProjet` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `IDProjet` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT for table `Tache`
 --
 ALTER TABLE `Tache`
-  MODIFY `IDTache` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=61664;
+  MODIFY `IDTache` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=61666;
 
 --
 -- AUTO_INCREMENT for table `Utilisateur`
 --
 ALTER TABLE `Utilisateur`
-  MODIFY `IDUser` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `IDUser` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- Constraints for dumped tables
