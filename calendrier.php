@@ -1,4 +1,21 @@
 <?php
+session_start();
+include('db.php');
+
+// Vérifier si l'utilisateur est connecté
+if (!isset($_SESSION['user_id'])) {
+    echo "Erreur : Vous devez être connecté pour accéder à cette page.";
+    exit();
+}
+
+// Récupérer les informations de l'utilisateur connecté
+$user_info = [
+    'Prenom' => $_SESSION['prenom'] ?? '',
+    'Nom' => $_SESSION['nom'] ?? '',
+    'photo' => $_SESSION['photo'] ?? 'default.png',
+    'statu' => $_SESSION['statu'] ?? 'User'
+];
+
 // Connexion à la base de données
 $hostname = "localhost";
 $username = "root";
@@ -14,11 +31,9 @@ if (!$connection) {
 // Gestion des requêtes AJAX uniquement
 if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest') {
     if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-        // Récupérer les paramètres de date
         $startDate = $_GET['start'] ?? null;
         $endDate = $_GET['end'] ?? null;
 
-        // Requête pour récupérer les tâches (colonnes au format VARCHAR(50))
         $sql = "SELECT IDTache as id, Titre as title, datedebut as start, datefin as end FROM Tache";
         if ($startDate && $endDate) {
             $sql .= " WHERE STR_TO_DATE(datedebut, '%Y-%m-%d') >= '$startDate' AND STR_TO_DATE(datefin, '%Y-%m-%d') <= '$endDate'";
@@ -42,7 +57,7 @@ if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQU
             header('Content-Type: application/json');
             echo json_encode(["error" => "Erreur SQL : " . mysqli_error($connection), "query" => $sql]);
         }
-        exit;
+        exit();
     }
 }
 ?>
@@ -52,7 +67,11 @@ if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQU
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calendrier Interactif</title>
+    <title>Calendrier - Gestion MNB</title>
+    <link rel="stylesheet" href="dashboard.css" />
+    <link href="https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/locales/fr.js"></script>
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -61,21 +80,21 @@ if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQU
             padding: 0;
         }
 
-        .container {
-            margin-top: 20px;
+        .home-content {
+            padding: 20px;
         }
 
         .calendar-container {
-            background-color: #ffffff;
+            background-color: #fff;
             padding: 20px;
-            border-radius: 15px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
         }
 
         .fc-toolbar-title {
-            font-size: 24px;
+            font-size: 22px;
             color: #6c63ff;
-            font-weight: bold;
             text-transform: uppercase;
             text-align: center;
         }
@@ -83,10 +102,8 @@ if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQU
         .fc-button {
             background-color: #6c63ff;
             color: #fff;
-            border: none;
-            padding: 8px 16px;
             border-radius: 5px;
-            font-size: 14px;
+            border: none;
         }
 
         .fc-button:hover {
@@ -94,42 +111,34 @@ if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQU
         }
 
         .fc-day-today {
-            background-color: #e8f7ff; /* Couleur de fond pour le jour actuel */
-            border: none;
-            border-radius: 0; /* Transforme en rectangle */
-        }
-
-        .fc-daygrid-day:hover {
-            background-color: #f0f0f0;
-            border-radius: 0; /* Supprime les coins arrondis */
-        }
-
-        .fc-daygrid-day {
-            text-align: center;
-            font-size: 14px;
-            padding: 10px;
-            transition: background-color 0.3s ease;
-            border-radius: 0; /* Supprime les coins arrondis */
+            background-color: #e8f7ff;
         }
 
         .fc-event {
             background-color: #6c63ff;
             color: #fff;
-            border-radius: 5px; /* Arrondi léger pour les événements */
+            border-radius: 5px;
         }
     </style>
-    <!-- FullCalendar -->
-    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/locales/fr.js"></script>
 </head>
 <body>
-    <div class="container mt-4">
-        <div class="calendar-container">
-            <div id="calendar"></div>
-        </div>
-    </div>
+    <!-- Sidebar -->
+    <?php include('sidebar.php'); ?>
 
-    <!-- FullCalendar -->
+    <!-- Main content section -->
+    <section class="home-section">
+        <!-- Header -->
+        <?php include('header_gestion.php'); ?>
+
+        <!-- Main Content -->
+        <div class="home-content">
+            <div class="calendar-container">
+                <div id="calendar"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
@@ -170,6 +179,18 @@ if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQU
             });
             calendar.render();
         });
+
+        // Script pour les trois barres du sidebar
+        let sidebar = document.querySelector(".sidebar");
+        let sidebarBtn = document.querySelector(".sidebarBtn");
+        sidebarBtn.onclick = function () {
+            sidebar.classList.toggle("active");
+            if (sidebar.classList.contains("active")) {
+                sidebarBtn.classList.replace("bx-menu", "bx-menu-alt-right");
+            } else {
+                sidebarBtn.classList.replace("bx-menu-alt-right", "bx-menu");
+            }
+        };
     </script>
 </body>
 </html>
