@@ -6,10 +6,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nom = trim($_POST['nom']);
     $prenom = trim($_POST['prenom']);
     $mail = trim($_POST['mail']);
-    $password = $_POST['password'];
-    $password_confirm = $_POST['password_confirm'];
+    $password = trim($_POST['password']);
+    $password_confirm = trim($_POST['password_confirm']);
     $photo = 'default.png';
 
+    // Vérification de l'unicité de l'email
     $query_check_email = "SELECT * FROM Utilisateur WHERE Email = ?";
     $stmt_check_email = mysqli_prepare($connection, $query_check_email);
     mysqli_stmt_bind_param($stmt_check_email, "s", $mail);
@@ -20,11 +21,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error_message = 'Cette adresse e-mail est déjà utilisée.';
     } elseif ($password !== $password_confirm) {
         $error_message = 'Les mots de passe ne correspondent pas.';
-    } elseif (!filter_var($mail, FILTER_VALIDATE_EMAIL)) {
-        $error_message = 'L\'adresse email n\'est pas valide.';
     } else {
         $Statu = 'User';
 
+        // Gestion de la photo de profil
         if (isset($_FILES['photo']) && $_FILES['photo']['error'] === UPLOAD_ERR_OK) {
             $upload_dir = 'pdp/';
             $photo = uniqid() . '_' . basename($_FILES['photo']['name']);
@@ -43,9 +43,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         if (!isset($error_message)) {
+            // Hachage du mot de passe
+            $hashed_password = password_hash($password, PASSWORD_BCRYPT);
+
+            // Insertion dans la base de données
             $query = "INSERT INTO Utilisateur (Email, MDP, Nom, Prenom, Statu, photo) VALUES (?, ?, ?, ?, ?, ?)";
             $stmt = mysqli_prepare($connection, $query);
-            mysqli_stmt_bind_param($stmt, "ssssss", $mail, $password, $nom, $prenom, $Statu, $photo);
+            mysqli_stmt_bind_param($stmt, "ssssss", $mail, $hashed_password, $nom, $prenom, $Statu, $photo);
 
             if (mysqli_stmt_execute($stmt)) {
                 $userId = mysqli_insert_id($connection);
@@ -62,6 +66,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 ?>
+
+
+
 
 <!DOCTYPE html>
 <html lang="fr">

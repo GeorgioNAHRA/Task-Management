@@ -6,23 +6,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $mail = $_POST['mail'];
     $password = $_POST['password'];
 
-    $query_user = "SELECT * FROM Utilisateur WHERE Email = ? AND MDP = ?";
+    // Requête pour récupérer l'utilisateur par e-mail
+    $query_user = "SELECT * FROM Utilisateur WHERE Email = ?";
     $stmt_user = mysqli_prepare($connection, $query_user);
-    mysqli_stmt_bind_param($stmt_user, "ss", $mail, $password);
+    mysqli_stmt_bind_param($stmt_user, "s", $mail);
     mysqli_stmt_execute($stmt_user);
     $result_user = mysqli_stmt_get_result($stmt_user);
 
     if ($user = mysqli_fetch_assoc($result_user)) {
-        $_SESSION['user_id'] = $user['IDUser'];
-        $_SESSION['nom'] = $user['Nom'];
-        $_SESSION['prenom'] = $user['Prenom'];
-        $_SESSION['mail'] = $user['Email'];
-        $_SESSION['statu'] = $user['Statu'];
-        $_SESSION['photo'] = $user['photo'];
+        // Vérifier le mot de passe haché
+        if (password_verify($password, $user['MDP'])) {
+            $_SESSION['user_id'] = $user['IDUser'];
+            $_SESSION['nom'] = $user['Nom'];
+            $_SESSION['prenom'] = $user['Prenom'];
+            $_SESSION['mail'] = $user['Email'];
+            $_SESSION['statu'] = $user['Statu'];
+            $_SESSION['photo'] = $user['photo'];
 
-        echo json_encode(['success' => true]);
+            echo json_encode(['success' => true]);
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Mot de passe incorrect.']);
+        }
     } else {
-        echo json_encode(['success' => false, 'message' => 'Identifiants incorrects']);
+        echo json_encode(['success' => false, 'message' => 'Utilisateur non trouvé.']);
     }
     exit();
 }

@@ -83,6 +83,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
             }
 
+            // Gestion de la modification du mot de passe
+            if (isset($_POST['password']) && !empty($_POST['password'])) {
+                $new_password = trim($_POST['password']);
+                $hashed_password = password_hash($new_password, PASSWORD_BCRYPT);
+
+                $update_password_query = "UPDATE Utilisateur SET MDP=? WHERE IDUser=?";
+                $stmt_password = mysqli_prepare($connection, $update_password_query);
+                mysqli_stmt_bind_param($stmt_password, "ss", $hashed_password, $user_id);
+
+                if (!mysqli_stmt_execute($stmt_password)) {
+                    $error_message = "Une erreur s'est produite lors de la mise à jour du mot de passe.";
+                }
+            }
+
             header('Location: MNB.php?success=1');
             exit();
         } else {
@@ -103,7 +117,6 @@ if (isset($_SESSION['user_id'])) {
     $user_info = mysqli_fetch_assoc($result);
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -171,6 +184,10 @@ if (isset($_SESSION['user_id'])) {
                     <input type="email" class="form-control readonly-email" id="mail" name="mail" value="<?php echo isset($user_info['Email']) ? $user_info['Email'] : ''; ?>" readonly>
                     <small class="text-muted">Votre adresse e-mail ne peut pas être modifiée.</small>
                 </div>
+                <div class="mb-3">
+                                    <label for="exampleDropdownFormPassword2" class="form-label">Mot de passe</label>
+                                    <input type="password" class="form-control" id="exampleDropdownFormPassword2" name="password" placeholder="Mot de passe" required>
+                                </div>
                 <div class="col-md-4">
                     <label for="photo" class="form-label">Photo de profil</label>
                     <input type="file" class="form-control" id="photo" name="photo" accept="image/*">
