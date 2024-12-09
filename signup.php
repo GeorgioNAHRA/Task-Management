@@ -9,7 +9,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $password = trim($_POST['password']);
     $password_confirm = trim($_POST['password_confirm']);
     $photo = 'default.png';
-    
 
     // Vérification de l'unicité de l'email
     $query_check_email = "SELECT * FROM Utilisateur WHERE Email = ?";
@@ -23,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } elseif ($password !== $password_confirm) {
         $error_message = 'Les mots de passe ne correspondent pas.';
     } else {
-        $Statu = 'User';
+        $Statu = 'User'; // Par défaut, chaque nouvel utilisateur est un User.
 
         // Gestion de la photo de profil
         if (isset($_FILES['photo']) && $_FILES['photo']['error'] === UPLOAD_ERR_OK) {
@@ -58,6 +57,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $_SESSION['nom'] = $nom;
                 $_SESSION['prenom'] = $prenom;
                 $_SESSION['mail'] = $mail;
+                $_SESSION['statu'] = $Statu; // Définit la clé statu dans la session.
+                $_SESSION['photo'] = $photo; // Définit également la photo dans la session.
                 header('Location: MNB.php');
                 exit();
             } else {
@@ -67,9 +68,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 ?>
-
-
-
 
 <!DOCTYPE html>
 <html lang="fr">
