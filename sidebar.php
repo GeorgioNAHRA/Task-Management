@@ -27,18 +27,26 @@
                 <span class="links_name">Création Projet</span>
             </a>
         </li>
-        <li>
-            <a href="gestion_client.php">
-                <i class="bx bx-user"></i>
-                <span class="links_name">Gestion Clients</span>
-            </a>
-        </li>
+        <?php if ($_SESSION['statu'] === 'Admin'): ?>
+            <li>
+                <a href="gestion_client.php">
+                    <i class="bx bx-user"></i>
+                    <span class="links_name">Gestion Clients</span>
+                </a>
+            </li>
+        <?php endif; ?>
         <li>
             <a href="gestion_projet.php">
                 <i class="bx bx-task"></i>
                 <span class="links_name">Gestion Projets</span>
             </a>
         </li>
+        <li>
+                <a href="calendrier.php">
+                    <i class="bx bx-coin-stack"></i>
+                    <span class="links_name">Calendrier</span>
+                </a>
+            </li>
         <li class="log_out">
             <a href="logout.php">
                 <i class="bx bx-log-out"></i>
