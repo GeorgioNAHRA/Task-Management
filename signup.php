@@ -74,41 +74,44 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link rel="stylesheet" href="MNB.css">
 </head>
 <body>
-    <!-- Header -->
-    <header class="bg-dark text-white py-3">
-        <div class="container">
-            <div class="d-flex justify-content-between align-items-center">
-            <a href="MNB.php" class="text-white text-decoration-none"><h1 class="h3 mb-0">MNB</h1></a>
-                <nav>
-                    <ul class="nav">
-                        <!-- Nav items here -->
-                    </ul>
-                </nav>
-                <div>
-                    <button class="btn btn-outline-light me-2" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">Se connecter</button>
-                    <form class="dropdown-menu p-4">
-                        <div class="mb-3">
-                            <label for="exampleDropdownFormEmail2" class="form-label">Email address</label>
-                            <input type="email" class="form-control" id="exampleDropdownFormEmail2" placeholder="email@example.com">
+<header class="bg-dark text-white py-3">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center">
+            <!-- Intégration du logo -->
+            <div class="d-flex align-items-center">
+                <img src="mnb.jpeg" alt="MNB Logo" style="width: 50px; height: 50px; object-fit: contain; margin-right: 15px;">
+                <a href="MNB.php" class="text-white text-decoration-none"><h1 class="h3 mb-0">MNB</h1></a>
+            </div>
+            <nav>
+                <ul class="nav">
+                    <!-- Nav items here -->
+                </ul>
+            </nav>
+            <div>
+                <button class="btn btn-outline-light me-2" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">Se connecter</button>
+                <form class="dropdown-menu p-4">
+                    <div class="mb-3">
+                        <label for="exampleDropdownFormEmail2" class="form-label">Email address</label>
+                        <input type="email" class="form-control" id="exampleDropdownFormEmail2" placeholder="email@example.com">
+                    </div>
+                    <div class="mb-3">
+                        <label for="exampleDropdownFormPassword2" class="form-label">Password</label>
+                        <input type="password" class="form-control" id="exampleDropdownFormPassword2" placeholder="Password">
+                    </div>
+                    <div class="mb-3">
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" id="dropdownCheck2">
+                            <label class="form-check-label" for="dropdownCheck2">Remember me</label>
                         </div>
-                        <div class="mb-3">
-                            <label for="exampleDropdownFormPassword2" class="form-label">Password</label>
-                            <input type="password" class="form-control" id="exampleDropdownFormPassword2" placeholder="Password">
-                        </div>
-                        <div class="mb-3">
-                            <div class="form-check">
-                                <input type="checkbox" class="form-check-input" id="dropdownCheck2">
-                                <label class="form-check-label" for="dropdownCheck2">Remember me</label>
-                            </div>
-                        </div>
-                        <button type="submit" class="btn btn-primary">Connecter</button>
-                    </form>
-                    <a href="signup.php" class="btn btn-light">S'inscrire</a>
-                    <a href="user.php" class="btn btn-light">Essayer MNB</a>
-                </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Connecter</button>
+                </form>
+                <a href="signup.php" class="btn btn-light">S'inscrire</a>
+                <a href="user.php" class="btn btn-light">Essayer MNB</a>
             </div>
         </div>
-    </header>
+    </div>
+</header>
 
     <!-- Main Content -->
     <main class="py-5">

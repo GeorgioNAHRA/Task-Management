@@ -120,33 +120,36 @@ if (isset($_SESSION['user_id'])) {
     </style>
 </head>
 <body>
-    <!-- Header -->
-    <header class="bg-dark text-white py-3">
-        <div class="container">
-            <div class="d-flex justify-content-between align-items-center">
+<header class="bg-dark text-white py-3">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center">
+            <!-- Logo intégré -->
+            <div class="d-flex align-items-center">
+                <img src="mnb.jpeg" alt="MNB Logo" style="width: 50px; height: 50px; object-fit: contain; margin-right: 15px;">
                 <a href="MNB.php" class="text-white text-decoration-none"><h1 class="h3 mb-0">MNB</h1></a>
-                <nav>
-                    <ul class="nav">
-                        <!-- Nav items -->
-                    </ul>
-                </nav>
-                <div class="d-flex align-items-center">
-                    <?php if ($user_info): ?>
-                        <span class="me-1">
-                            <?php echo htmlspecialchars($user_info['Prenom'] . ' ' . $user_info['Nom']); ?>
-                            <?php if (!empty($user_info['photo'])): ?>
-                                <img src="pdp/<?php echo htmlspecialchars($user_info['photo']); ?>" alt="Profile Picture" class="rounded-circle" style="width: 30px; height: 30px; object-fit: cover;">
-                            <?php endif; ?>
-                        </span>
-                        <a href="compte.php" class="btn btn-outline-light ms-2">Compte</a>
-                        <a href="logout.php" class="btn btn-outline-light ms-2">Se déconnecter</a>
-                    <?php else: ?>
-                        <a href="signup.php" class="btn btn-light">S'inscrire</a>
-                    <?php endif; ?>
-                </div>
+            </div>
+            <nav>
+                <ul class="nav">
+                    <!-- Nav items -->
+                </ul>
+            </nav>
+            <div class="d-flex align-items-center">
+                <?php if ($user_info): ?>
+                    <span class="me-1">
+                        <?php echo htmlspecialchars($user_info['Prenom'] . ' ' . $user_info['Nom']); ?>
+                        <?php if (!empty($user_info['photo'])): ?>
+                            <img src="pdp/<?php echo htmlspecialchars($user_info['photo']); ?>" alt="Profile Picture" class="rounded-circle" style="width: 30px; height: 30px; object-fit: cover;">
+                        <?php endif; ?>
+                    </span>
+                    <a href="compte.php" class="btn btn-outline-light ms-2">Compte</a>
+                    <a href="logout.php" class="btn btn-outline-light ms-2">Se déconnecter</a>
+                <?php else: ?>
+                    <a href="signup.php" class="btn btn-light">S'inscrire</a>
+                <?php endif; ?>
             </div>
         </div>
-    </header>
+    </div>
+</header>
 
     <!-- Main Content -->
     <main class="py-5">
