@@ -9,6 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $password = trim($_POST['password']);
     $password_confirm = trim($_POST['password_confirm']);
     $photo = 'default.png';
+    
 
     // Vérification de l'unicité de l'email
     $query_check_email = "SELECT * FROM Utilisateur WHERE Email = ?";
@@ -95,7 +96,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </ul>
             </nav>
             <div>
-                <button class="btn btn-outline-light me-2" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">Se connecter</button>
                 <form class="dropdown-menu p-4">
                     <div class="mb-3">
                         <label for="exampleDropdownFormEmail2" class="form-label">Email address</label>
@@ -113,8 +113,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
                     <button type="submit" class="btn btn-primary">Connecter</button>
                 </form>
-                <a href="signup.php" class="btn btn-light">S'inscrire</a>
-                <a href="user.php" class="btn btn-light">Essayer MNB</a>
             </div>
         </div>
     </div>
