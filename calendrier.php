@@ -28,36 +28,17 @@ if (!$connection) {
     die("Erreur de connexion à la base de données: " . mysqli_connect_error());
 }
 
-// Gestion des requêtes AJAX uniquement
-if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest') {
-    if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-        $startDate = $_GET['start'] ?? null;
-        $endDate = $_GET['end'] ?? null;
+// Récupérer toutes les tâches
+$taches = [];
+$sql = "SELECT Tache.*, GROUP_CONCAT(Utilisateur.Prenom, ' ', Utilisateur.Nom) AS users 
+        FROM Tache 
+        LEFT JOIN Utilisateur ON FIND_IN_SET(Utilisateur.IDUser, Tache.IDUser)
+        GROUP BY Tache.IDTache";
 
-        $sql = "SELECT IDTache as id, Titre as title, datedebut as start, datefin as end FROM Tache";
-        if ($startDate && $endDate) {
-            $sql .= " WHERE STR_TO_DATE(datedebut, '%Y-%m-%d') >= '$startDate' AND STR_TO_DATE(datefin, '%Y-%m-%d') <= '$endDate'";
-        }
-
-        $result = mysqli_query($connection, $sql);
-
-        if ($result) {
-            $events = [];
-            while ($row = mysqli_fetch_assoc($result)) {
-                $events[] = [
-                    'id' => $row['id'],
-                    'title' => $row['title'],
-                    'start' => $row['start'],
-                    'end' => $row['end']
-                ];
-            }
-            header('Content-Type: application/json');
-            echo json_encode($events);
-        } else {
-            header('Content-Type: application/json');
-            echo json_encode(["error" => "Erreur SQL : " . mysqli_error($connection), "query" => $sql]);
-        }
-        exit();
+$result = mysqli_query($connection, $sql);
+if ($result) {
+    while ($row = mysqli_fetch_assoc($result)) {
+        $taches[] = $row;
     }
 }
 ?>
@@ -119,6 +100,47 @@ if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQU
             color: #fff;
             border-radius: 5px;
         }
+
+        /* Style de la fenêtre modale */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content {
+            background-color: #fff;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 50%;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-header, .modal-body, .modal-footer {
+            margin-bottom: 10px;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover, .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -138,9 +160,24 @@ if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQU
         </div>
     </section>
 
+    <!-- Fenêtre modale -->
+    <div id="taskModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div class="modal-header">
+                <h2 id="taskTitle">Titre de la tâche</h2>
+            </div>
+            <div class="modal-body">
+                <p><strong>Description :</strong> <span id="taskDescription"></span></p>
+                <p><strong>Date de début :</strong> <span id="taskStart"></span></p>
+                <p><strong>Date de fin :</strong> <span id="taskEnd"></span></p>
+                <p><strong>Utilisateurs associés :</strong> <span id="taskUsers"></span></p>
+            </div>
+        </div>
+    </div>
+
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             var calendarEl = document.getElementById('calendar');
@@ -156,41 +193,36 @@ if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQU
                     today: 'Aujourd\'hui',
                     month: 'Mois',
                     week: 'Semaine',
-                    day: 'Jour',
-                    list: 'Liste'
+                    day: 'Jour'
                 },
-                events: function(fetchInfo, successCallback, failureCallback) {
-                    $.ajax({
-                        url: 'calendrier.php',
-                        type: 'GET',
-                        data: {
-                            start: fetchInfo.startStr,
-                            end: fetchInfo.endStr
-                        },
-                        success: function(data) {
-                            successCallback(data);
-                        },
-                        error: function(xhr) {
-                            console.error("Erreur lors de la récupération des événements :", xhr.responseText);
-                            failureCallback([]);
-                        }
-                    });
+                events: <?php echo json_encode(array_map(function($tache) {
+                    return [
+                        'id' => $tache['IDTache'],
+                        'title' => $tache['Titre'],
+                        'start' => $tache['datedebut'],
+                        'end' => $tache['datefin']
+                    ];
+                }, $taches)); ?>,
+                eventClick: function(info) {
+                    // Afficher les détails de la tâche dans la fenêtre modale
+                    var task = <?php echo json_encode($taches); ?>.find(t => t.IDTache == info.event.id);
+                    document.getElementById('taskTitle').innerText = task.Titre;
+                    document.getElementById('taskDescription').innerText = task.description;
+                    document.getElementById('taskStart').innerText = task.datedebut;
+                    document.getElementById('taskEnd').innerText = task.datefin;
+                    document.getElementById('taskUsers').innerText = task.users || 'Aucun utilisateur';
+
+                    // Afficher la fenêtre modale
+                    document.getElementById('taskModal').style.display = 'block';
                 }
             });
             calendar.render();
-        });
 
-        // Script pour les trois barres du sidebar
-        let sidebar = document.querySelector(".sidebar");
-        let sidebarBtn = document.querySelector(".sidebarBtn");
-        sidebarBtn.onclick = function () {
-            sidebar.classList.toggle("active");
-            if (sidebar.classList.contains("active")) {
-                sidebarBtn.classList.replace("bx-menu", "bx-menu-alt-right");
-            } else {
-                sidebarBtn.classList.replace("bx-menu-alt-right", "bx-menu");
-            }
-        };
+            // Gestion de la fermeture de la modale
+            document.querySelector('.close').onclick = function() {
+                document.getElementById('taskModal').style.display = 'none';
+            };
+        });
     </script>
 </body>
 </html>
