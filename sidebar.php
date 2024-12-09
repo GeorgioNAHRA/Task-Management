@@ -39,6 +39,12 @@
                 <span class="links_name">Gestion Projets</span>
             </a>
         </li>
+        <li>
+                <a href="calendrier.php">
+                    <i class="bx bx-coin-stack"></i>
+                    <span class="links_name">Calendrier</span>
+                </a>
+            </li>
         <li class="log_out">
             <a href="logout.php">
                 <i class="bx bx-log-out"></i>
