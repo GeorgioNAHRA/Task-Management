@@ -2,16 +2,18 @@
 session_start();
 include('db.php');
 
-// Check if the user is logged in and has the 'Admin' status
-if (!isset($_SESSION['user_id']) || $_SESSION['statu'] !== 'Admin') {
-    echo "Erreur : Vous n'êtes pas autorisé à accéder à cette page.";
+// Vérification si l'utilisateur est connecté
+if (!isset($_SESSION['user_id'])) {
+    echo "Erreur : Vous devez être connecté pour accéder à cette page.";
     exit();
 }
 
+// Informations de l'utilisateur connecté
 $user_info = [
     'Prenom' => $_SESSION['prenom'],
     'Nom' => $_SESSION['nom'],
-    'photo' => $_SESSION['photo']
+    'photo' => $_SESSION['photo'],
+    'statu' => $_SESSION['statu']
 ];
 
 $servername = "localhost";
@@ -21,197 +23,57 @@ $dbname = "MNB_data";
 
 // Connexion à la base de données
 $conn = new mysqli($servername, $username, $password, $dbname);
-
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Fonction pour afficher les utilisateurs
-function afficherUtilisateurs($conn) {
-    $sql = "SELECT * FROM Utilisateur WHERE Statu='User'";
-    $result = $conn->query($sql);
-
-    if ($result->num_rows > 0) {
-        while ($row = $result->fetch_assoc()) {
-            echo '<tr>';
-            echo '<td>' . $row["IDUser"] . '</td>';
-            echo '<td>' . $row["Nom"] . '</td>';
-            echo '<td>' . $row["Prenom"] . '</td>';
-            echo '<td>';
-            echo '<form method="post" action="" style="display:inline-block;">
-                    <input type="hidden" name="user_id" value="' . $row["IDUser"] . '">
-                    <button type="submit" name="delete" class="btn btn-danger">Supprimer</button>
-                  </form>';
-            echo '</td>';
-            echo '</tr>';
-        }
+// Fonction pour afficher les projets
+function afficherProjets($conn, $user_info) {
+    if ($user_info['statu'] === 'Admin') {
+        $sql = "SELECT * FROM Projet";
     } else {
-        echo "<tr><td colspan='4'>Aucun utilisateur à afficher.</td></tr>";
+        $user_id = $_SESSION['user_id'];
+        $sql = "SELECT * FROM Projet WHERE FIND_IN_SET('$user_id', IDUsers)";
     }
-}
 
-// Fonction pour afficher les projets en cours
-function afficherProjetsEnCours($conn) {
-    $sql = "SELECT * FROM Projet";
     $result = $conn->query($sql);
 
     if ($result->num_rows > 0) {
         while ($row = $result->fetch_assoc()) {
             echo '<tr>';
             echo '<td>' . $row["IDProjet"] . '</td>';
-            echo '<td>' . $row["nomProjet"] . '</td>';
-            echo '<td>' . $row["descriptionProjet"] . '</td>';
-            echo '<td>' . $row["Duree_projet"] . '</td>';
-            echo '<td>' . $row["Statu"] . '</td>';
-            echo '<td>' . $row["budget"] . '</td>';
+            echo '<td>' . htmlspecialchars($row["nomProjet"]) . '</td>';
+            echo '<td>' . htmlspecialchars($row["descriptionProjet"]) . '</td>';
+            echo '<td>' . htmlspecialchars($row["Duree_projet"]) . '</td>';
+            echo '<td>' . htmlspecialchars($row["Statu"]) . '</td>';
+            echo '<td>' . htmlspecialchars($row["budget"]) . '</td>';
             echo '<td>';
-            
-            // Bouton "Gérer" modifié pour passer l'IDProjet et gérer dans plan.php
             echo '<form method="post" action="plan.php" style="display:inline-block;">
                     <input type="hidden" name="id_projet" value="' . $row["IDProjet"] . '">
                     <button type="submit" class="btn btn-info">Gérer</button>
                   </form>';
-
             echo '</td>';
             echo '<td>';
-
-            // Bouton "Modifier"
+            // Afficher les boutons "Modifier" et "Supprimer" pour tous les utilisateurs
             echo '<form method="get" action="modifier_projet.php" style="display:inline-block; margin-right: 10px;">
                     <input type="hidden" name="id" value="' . $row["IDProjet"] . '">
                     <button type="submit" class="btn btn-warning">Modifier</button>
                   </form>';
-
-            // Bouton "Supprimer"
             echo '<form method="post" action="" style="display:inline-block;">
                     <input type="hidden" name="projet_id" value="' . $row["IDProjet"] . '">
                     <button type="submit" name="supprimer_projet" class="btn btn-danger">Supprimer</button>
                   </form>';
-
             echo '</td>';
             echo '</tr>';
         }
     } else {
-        echo "<tr><td colspan='8'>Aucun projet en cours à afficher.</td></tr>";
-    }
-}
-
-// User un compte utilisateur
-if (isset($_POST['accept'])) {
-    $user_id = $_POST['user_id'];
-    $sql = "UPDATE Utilisateur SET Statu='User' WHERE IDUser='$user_id'";
-    
-    if ($conn->query($sql) === TRUE) {
-        echo "<p>Compte utilisateur accepté avec succès.</p>";
-    } else {
-        echo "<p>Erreur lors de l'acceptation du compte: " . $conn->error . "</p>";
-    }
-}
-
-// Supprimer un compte utilisateur
-if (isset($_POST['delete'])) {
-    $user_id = $_POST['user_id'];
-    
-    // Supprimer d'abord les enregistrements dépendants dans la table 'creer'
-    $sql = "DELETE FROM creer WHERE IDUser='$user_id'";
-    $result = $conn->query($sql);
-
-    if ($result === TRUE) {
-        // Ensuite, supprimer l'utilisateur de la table 'Utilisateur'
-        $sql = "DELETE FROM Utilisateur WHERE IDUser='$user_id'";
-        if ($conn->query($sql) === TRUE) {
-            echo "<p>Compte utilisateur et les données associées supprimés avec succès.</p>";
-        } else {
-            echo "<p>Erreur lors de la suppression du compte utilisateur: " . $conn->error . "</p>";
-        }
-    } else {
-        echo "<p>Erreur lors de la suppression des données associées: " . $conn->error . "</p>";
-    }
-}
-
-// Modifier un projet
-if (isset($_POST['modifier_projet'])) {
-    $projet_id = $_POST['projet_id'];
-    $sql = "SELECT * FROM Projet WHERE IDProjet='$projet_id'";
-    $result = $conn->query($sql);
-
-    if ($result->num_rows > 0) {
-        $row = $result->fetch_assoc();
-        echo '<h2>Modifier le Projet</h2>';
-        echo '<form method="post" action="">';
-        echo '<input type="hidden" name="projet_id" value="' . $row["IDProjet"] . '">';
-        echo '<label for="nom_projet">Nom du Projet:</label>';
-        echo '<input type="text" id="nom_projet" name="nom_projet" value="' . $row["nomProjet"] . '" required>';
-        echo '<br>';
-        echo '<label for="description">Description:</label>';
-        echo '<textarea id="description" name="description" required>' . $row["descriptionProjet"] . '</textarea>';
-        echo '<br>';
-        echo '<label for="duree_projet">Durée du Projet:</label>';
-        echo '<input type="text" id="duree_projet" name="duree_projet" value="' . $row["Duree_projet"] . '" required>';
-        echo '<br>';
-        echo '<label for="statu">Statut:</label>';
-        echo '<input type="text" id="statu" name="statu" value="' . $row["Statu"] . '" required>';
-        echo '<br>';
-        echo '<label for="budget">Budget:</label>';
-        echo '<input type="number" id="budget" name="budget" value="' . $row["budget"] . '" required>';
-        echo '<br>';
-        echo '<button type="submit" name="sauvegarder_projet">Sauvegarder</button>';
-        echo '</form>';
-    }
-}
-
-// Sauvegarder les modifications d'un projet
-if (isset($_POST['sauvegarder_projet'])) {
-    $projet_id = $_POST['projet_id'];
-    $nom_projet = $_POST['nom_projet'];
-    $description = $_POST['description'];
-    $duree_projet = $_POST['duree_projet'];
-    $statu = $_POST['statu'];
-    $budget = $_POST['budget'];
-
-    $sql = "UPDATE Projet SET nomProjet='$nom_projet', Duree_projet='$duree_projet', descriptionProjet='$description', Statu='$statu', budget='$budget' WHERE IDProjet='$projet_id'";
-    
-    if ($conn->query($sql) === TRUE) {
-        echo "<p>Projet modifié avec succès.</p>";
-    } else {
-        echo "<p>Erreur lors de la modification du projet: " . $conn->error . "</p>";
+        echo "<tr><td colspan='8'>Aucun projet à afficher.</td></tr>";
     }
 }
 
 // Supprimer un projet
 if (isset($_POST['supprimer_projet'])) {
     $projet_id = $_POST['projet_id'];
-
-    // Supprimer d'abord les enregistrements dépendants dans la table 'commentaire'
-    $sql = "SELECT IDTache FROM Tache WHERE IDProjet_avoir='$projet_id'";
-    $result = $conn->query($sql);
-    if ($result->num_rows > 0) {
-        while ($row = $result->fetch_assoc()) {
-            $idtache = $row['IDTache'];
-            $sql = "DELETE FROM commentaire WHERE IDTache_contenir2='$idtache'";
-            if (!$conn->query($sql)) {
-                echo "<p>Erreur lors de la suppression des commentaires de la tâche $idtache: " . $conn->error . "</p>";
-                exit;
-            }
-        }
-    }
-
-    // Tables à supprimer avec la contrainte sur la colonne appropriée
-    $tables = [
-        'notifier' => 'IDProjet',
-        'creer' => 'IDProjet',
-        'dossier' => 'IDProjet__contenir1',
-        'modifier' => 'IDProjet'
-    ];
-
-    foreach ($tables as $table => $column) {
-        $sql = "DELETE FROM $table WHERE $column='$projet_id'";
-        if (!$conn->query($sql)) {
-            echo "<p>Erreur lors de la suppression des données associées dans la table '$table': " . $conn->error . "</p>";
-            exit;
-        }
-    }
-
-    // Enfin, supprimer le projet de la table 'Projet'
     $sql = "DELETE FROM Projet WHERE IDProjet='$projet_id'";
     if ($conn->query($sql) === TRUE) {
         echo "<p>Projet supprimé avec succès.</p>";
@@ -236,7 +98,7 @@ if (isset($_POST['supprimer_projet'])) {
         <?php include('header_gestion.php'); ?>
         <div class="home-content">
             <div class="projects-table">
-                <h2>Projets en cours</h2>
+                <h2>Projets</h2>
                 <table>
                     <thead>
                         <tr>
@@ -251,7 +113,7 @@ if (isset($_POST['supprimer_projet'])) {
                         </tr>
                     </thead>
                     <tbody id="ongoing-projects">
-                        <?php afficherProjetsEnCours($conn); ?>
+                        <?php afficherProjets($conn, $user_info); ?>
                     </tbody>
                 </table>
             </div>
@@ -270,12 +132,10 @@ if (isset($_POST['supprimer_projet'])) {
     </script>
 
     <style>
-        /* Styles pour le contenu de la page */
         .home-content {
             padding: 20px;
         }
 
-        .users-table,
         .projects-table {
             background: #fff;
             padding: 20px;
@@ -284,7 +144,6 @@ if (isset($_POST['supprimer_projet'])) {
             box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
         }
 
-        .users-table h2,
         .projects-table h2 {
             margin-bottom: 20px;
             font-size: 22px;
@@ -292,33 +151,27 @@ if (isset($_POST['supprimer_projet'])) {
             color: #333;
         }
 
-        .users-table table,
         .projects-table table {
             width: 100%;
             border-collapse: collapse;
         }
 
-        .users-table table thead tr,
         .projects-table table thead tr {
             background: #2B3A42;
             color: #fff;
             text-align: left;
         }
 
-        .users-table table th,
-        .users-table table td,
         .projects-table table th,
         .projects-table table td {
             padding: 12px 15px;
             border-bottom: 1px solid #ddd;
         }
 
-        .users-table table tbody tr:hover,
         .projects-table table tbody tr:hover {
             background: #f1f1f1;
         }
 
-        .users-table button,
         .projects-table button {
             background: #2B3A42;
             color: #fff;
@@ -329,7 +182,6 @@ if (isset($_POST['supprimer_projet'])) {
             transition: background 0.3s ease;
         }
 
-        .users-table button:hover,
         .projects-table button:hover {
             background: #0e98e6;
         }

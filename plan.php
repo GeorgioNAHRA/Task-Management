@@ -2,9 +2,9 @@
 session_start();
 include('db.php');
 
-// Vérification de l'authentification et des privilèges d'admin
-if (!isset($_SESSION['user_id']) || $_SESSION['statu'] !== 'Admin') {
-    echo "Erreur : Vous n'êtes pas autorisé à accéder à cette page.";
+// Vérification de l'accès
+if (!isset($_SESSION['user_id'])) {
+    echo "Erreur : Vous devez être connecté pour accéder à cette page.";
     exit();
 }
 
@@ -12,7 +12,9 @@ if (!isset($_SESSION['user_id']) || $_SESSION['statu'] !== 'Admin') {
 $user_info = [
     'Prenom' => $_SESSION['prenom'],
     'Nom' => $_SESSION['nom'],
-    'photo' => $_SESSION['photo']
+    'photo' => $_SESSION['photo'],
+    'statu' => $_SESSION['statu'],
+    'id_user' => $_SESSION['user_id']
 ];
 
 // Connexion à la base de données
@@ -55,14 +57,24 @@ if (!$projet) {
     exit();
 }
 
-// Utilisateurs associés au projet
+// Vérifier si l'utilisateur a accès au projet
 $project_users = explode(',', $projet['IDUsers']);
+if ($_SESSION['statu'] !== 'Admin' && !in_array($_SESSION['user_id'], $project_users)) {
+    echo "<p>Erreur : Vous n'avez pas accès à ce projet.</p>";
+    exit();
+}
+
+// Utilisateurs associés au projet
 $users = $conn->query("SELECT * FROM Utilisateur");
 $taches = $conn->query("SELECT * FROM Tache WHERE IDProjet = '$id_projet'");
 
 // Mettre à jour les utilisateurs associés
 if (isset($_POST['update_users'])) {
     $selected_users = isset($_POST['project_users']) ? $_POST['project_users'] : [];
+    if ($_SESSION['statu'] === 'User' && !in_array($_SESSION['user_id'], $selected_users)) {
+        // L'utilisateur connecté doit toujours être inclus
+        $selected_users[] = $_SESSION['user_id'];
+    }
     $updated_users = implode(',', $selected_users);
 
     $conn->query("UPDATE Projet SET IDUsers = '$updated_users' WHERE IDProjet = '$id_projet'");
@@ -174,11 +186,16 @@ $files = $conn->query("SELECT * FROM Files WHERE IDProjet = '$id_projet'");
                         <label for="project_users">Utilisateurs disponibles :</label>
                         <div>
                             <?php while ($user = $users->fetch_assoc()): ?>
+                                <?php
+                                $is_current_user = $user['IDUser'] == $_SESSION['user_id'];
+                                $disabled = ($_SESSION['statu'] === 'User' && $is_current_user) ? 'disabled' : '';
+                                ?>
                                 <div class="form-check">
                                     <input type="checkbox" class="form-check-input" id="user_<?= $user['IDUser'] ?>" name="project_users[]" value="<?= $user['IDUser'] ?>"
-                                    <?= in_array($user['IDUser'], $project_users) ? 'checked' : '' ?>>
+                                    <?= in_array($user['IDUser'], $project_users) ? 'checked' : '' ?> <?= $disabled ?>>
                                     <label class="form-check-label" for="user_<?= $user['IDUser'] ?>">
                                         <?= htmlspecialchars($user['Prenom'] . " " . $user['Nom']) ?>
+                                        <?= $is_current_user ? '(Vous)' : '' ?>
                                     </label>
                                 </div>
                             <?php endwhile; ?>

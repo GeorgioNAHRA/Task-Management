@@ -2,16 +2,18 @@
 session_start();
 include('db.php');
 
-// Check if the user is logged in and has the 'Admin' status
-if (!isset($_SESSION['user_id']) || $_SESSION['statu'] !== 'Admin') {
-    echo "Erreur : Vous n'êtes pas autorisé à accéder à cette page.";
+// Vérification de l'accès
+if (!isset($_SESSION['user_id'])) {
+    echo "Erreur : Vous devez être connecté pour accéder à cette page.";
     exit();
 }
 
 $user_info = [
     'Prenom' => $_SESSION['prenom'],
     'Nom' => $_SESSION['nom'],
-    'photo' => $_SESSION['photo']
+    'photo' => $_SESSION['photo'],
+    'statu' => $_SESSION['statu'],
+    'id_user' => $_SESSION['user_id']
 ];
 
 $servername = "localhost";
@@ -33,6 +35,8 @@ if (!isset($_GET['id'])) {
 }
 
 $projet_id = $_GET['id'];
+
+// Récupération des informations du projet
 $sql = "SELECT * FROM Projet WHERE IDProjet='$projet_id'";
 $result = $conn->query($sql);
 
@@ -42,6 +46,15 @@ if ($result->num_rows === 0) {
 }
 
 $row = $result->fetch_assoc();
+
+// Vérification si l'utilisateur fait partie du projet (si non admin)
+if ($user_info['statu'] !== 'Admin') {
+    $project_users = explode(',', $row['IDUsers']);
+    if (!in_array($user_info['id_user'], $project_users)) {
+        echo "Erreur : Vous n'êtes pas autorisé à accéder à ce projet.";
+        exit();
+    }
+}
 
 // Sauvegarder les modifications du projet
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -66,6 +79,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="fr" dir="ltr">

@@ -2,16 +2,19 @@
 session_start();
 include('db.php');
 
-// Check if the user is logged in and has the 'Admin' status
-if (!isset($_SESSION['user_id']) || $_SESSION['statu'] !== 'Admin') {
-    echo "Erreur : Vous n'êtes pas autorisé à accéder à cette page.";
+// Vérification de l'accès
+if (!isset($_SESSION['user_id'])) {
+    echo "Erreur : Vous devez être connecté pour accéder à cette page.";
     exit();
 }
 
+// Informations de l'utilisateur connecté
 $user_info = [
     'Prenom' => $_SESSION['prenom'],
     'Nom' => $_SESSION['nom'],
-    'photo' => $_SESSION['photo']
+    'photo' => $_SESSION['photo'],
+    'statu' => $_SESSION['statu'],
+    'id_user' => $_SESSION['user_id']
 ];
 
 $servername = "localhost";
@@ -21,7 +24,6 @@ $dbname = "MNB_data";
 
 // Connexion à la base de données
 $conn = new mysqli($servername, $username, $password, $dbname);
-
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
@@ -34,11 +36,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $budget = $_POST['budget'];
     $duree = $_POST['duree_projet'];
     $participants = isset($_POST['participants']) ? $_POST['participants'] : [];
+
+    // Ajouter automatiquement l'utilisateur connecté s'il est User
+    if ($_SESSION['statu'] === 'User' && !in_array($_SESSION['user_id'], $participants)) {
+        $participants[] = $_SESSION['user_id'];
+    }
+
     $idUsers = implode(',', $participants); // Transformer les ID utilisateurs en chaîne (ex : "2,3,4")
 
     // Insérer le projet avec les utilisateurs associés
     $stmt = $conn->prepare("INSERT INTO Projet (nomProjet, descriptionProjet, Duree_projet, Statu, budget, IDUsers) VALUES (?, ?, ?, ?, ?, ?)");
-    $stmt->bind_param("ssisds", $nomProjet, $descriptionProjet, $duree, $statu, $budget, $idUsers);
+    $stmt->bind_param("ssisis", $nomProjet, $descriptionProjet, $duree, $statu, $budget, $idUsers);
     $stmt->execute();
 
     echo "<p>Projet créé avec succès.</p>";
@@ -100,9 +108,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <?php
                             $users = $conn->query('SELECT IDUser, nom FROM Utilisateur');
                             while ($user = $users->fetch_assoc()) {
+                                $isCurrentUser = $user['IDUser'] == $_SESSION['user_id'];
+                                $checked = $isCurrentUser ? 'checked' : '';
+                                $disabled = ($_SESSION['statu'] === 'User' && $isCurrentUser) ? 'disabled' : '';
                                 echo '<div class="participant-option">';
-                                echo '<input type="checkbox" id="user_' . $user['IDUser'] . '" name="participants[]" value="' . $user['IDUser'] . '">';
-                                echo '<label for="user_' . $user['IDUser'] . '">' . $user['nom'] . '</label>';
+                                echo '<input type="checkbox" id="user_' . $user['IDUser'] . '" name="participants[]" value="' . $user['IDUser'] . '" ' . $checked . ' ' . $disabled . '>';
+                                echo '<label for="user_' . $user['IDUser'] . '">' . $user['nom'] . ($isCurrentUser ? ' (Vous)' : '') . '</label>';
                                 echo '</div>';
                             }
                             ?>
