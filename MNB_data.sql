@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Dec 09, 2024 at 07:21 PM
+-- Generation Time: Dec 10, 2024 at 06:01 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -80,10 +80,8 @@ CREATE TABLE `Projet` (
 --
 
 INSERT INTO `Projet` (`IDProjet`, `nomProjet`, `Duree_projet`, `descriptionProjet`, `IDTache`, `Statu`, `budget`, `IDUsers`) VALUES
-(1, 'Projet Alpha', '6 mois', 'Développement de la plateforme Alpha', NULL, 'En cours', 10000, NULL),
-(2, 'Projet Beta', '3 mois', 'Mise à jour de la plateforme Beta', NULL, 'Terminé', 5000, NULL),
-(16, 'Test', '1000', 'Bobdsssss', NULL, 'En cours', 12, '2'),
-(17, 'ntm', '12', 'ta mere ', NULL, 'En cours', 200, '1,2,10');
+(18, 'Tesy', '10', 'slides', NULL, 'En cours', 122, '1'),
+(19, 'dflsd', '13', 'sds', NULL, 'En cours', 134, '1');
 
 -- --------------------------------------------------------
 
@@ -94,7 +92,7 @@ INSERT INTO `Projet` (`IDProjet`, `nomProjet`, `Duree_projet`, `descriptionProje
 CREATE TABLE `Tache` (
   `IDTache` int(11) NOT NULL,
   `Titre` varchar(50) NOT NULL,
-  `description` varchar(50) NOT NULL,
+  `description` varchar(255) DEFAULT NULL,
   `datedebut` varchar(50) NOT NULL,
   `datefin` varchar(50) NOT NULL,
   `IDUser` text DEFAULT NULL,
@@ -106,9 +104,8 @@ CREATE TABLE `Tache` (
 --
 
 INSERT INTO `Tache` (`IDTache`, `Titre`, `description`, `datedebut`, `datefin`, `IDUser`, `IDProjet`) VALUES
-(61663, 'dsd', 'sd', '2024-12-11', '2024-12-25', '9', 15),
-(61664, 'georgio', 'ntm gpt', '2024-12-17', '2024-12-19', '1', 17),
-(61665, 'ss', 'seeds', '2024-12-10', '2024-12-12', '2', 16);
+(61666, 'Configuration de la base de données', 'Concevoir le schéma de la base de données et implémenter les tables, relations et procédures nécessaires', '2024-12-08', '2024-12-13', '1', 18),
+(61667, 'Implémentation de l’authentification', 'Ajouter un système d’authentification sécurisé avec gestion des rôles et permissions', '2024-12-12', '2024-12-15', '1', 19);
 
 -- --------------------------------------------------------
 
@@ -131,8 +128,10 @@ CREATE TABLE `Utilisateur` (
 --
 
 INSERT INTO `Utilisateur` (`IDUser`, `Email`, `MDP`, `Nom`, `Prenom`, `photo`, `Statu`) VALUES
-(1, 'alice@example.com', '$2y$10$l64frc2UI1tOD.uJwGxubucfGiV3W8la627GMBUoF3Sh/SYRHde3C', 'Alice', 'Smith', '675031c1f36e5_147568.jpg', 'Admin'),
-(10, 'lucie.lopez@gmail.com', '$2y$10$fNxYFk0IK8X66oZSvV2SqODAiNQmrJeIw2xxTamV5tjFB/DCFHwwC', 'Lucie', 'Lopez', 'default.png', 'User');
+(1, 'alice@test.com', '$2y$10$l64frc2UI1tOD.uJwGxubucfGiV3W8la627GMBUoF3Sh/SYRHde3C', 'Alice', 'Smith', '675031c1f36e5_147568.jpg', 'Admin'),
+(10, 'lucie.lopez@gmail.com', '$2y$10$fNxYFk0IK8X66oZSvV2SqODAiNQmrJeIw2xxTamV5tjFB/DCFHwwC', 'Lucie', 'Lopez', 'default.png', 'User'),
+(11, 'sd@gmail.com', '$2y$10$N079tzx.fwgpRSb3HvK/z.Hc1WKj50pdsxadH36xS4lleQNmqahpe', 'ww', 'ss', 'default.png', 'User'),
+(12, 'qswwq@gmail.com', '$2y$10$YnRByE7MIOBuhtDhbMQMweGYjQG4f0zbdvNl98ab94xQd0rn9zWhO', 'qqs', 'qwq', 'default.png', 'User');
 
 --
 -- Indexes for dumped tables
@@ -191,19 +190,19 @@ ALTER TABLE `Files`
 -- AUTO_INCREMENT for table `Projet`
 --
 ALTER TABLE `Projet`
-  MODIFY `IDProjet` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `IDProjet` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- AUTO_INCREMENT for table `Tache`
 --
 ALTER TABLE `Tache`
-  MODIFY `IDTache` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=61666;
+  MODIFY `IDTache` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=61668;
 
 --
 -- AUTO_INCREMENT for table `Utilisateur`
 --
 ALTER TABLE `Utilisateur`
-  MODIFY `IDUser` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `IDUser` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- Constraints for dumped tables
