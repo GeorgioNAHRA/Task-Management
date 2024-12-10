@@ -150,19 +150,19 @@ if (isset($_SESSION['user_id'])) {
             <div class="row">
                 <div class="col-md-6">
                     <div class="card" style="width: 100%;">
-                        <img src="accueil.jpg" class="card-img-top" alt="...">
+                        <img src="images/projet.jpg" class="card-img-top" alt="...">
                         <div class="card-body">
                             <h5 class="card-title"><span>Projet</span></h5>
-                            <p class="card-text">Dans l'ensemble, la page projet semble être une introduction à un projet spécifique sur la plateforme "MNB".</p>
+                            <p class="card-text">La page de création de projets vous permet d’initier un nouveau projet en saisissant toutes les informations nécessaires.</p>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="card" style="width: 104%;">
-                        <img src="gestion.jpg" class="card-img-top" alt="...">
+                        <img src="images/calendrier.jpg" class="card-img-top" alt="...">
                         <div class="card-body">
-                            <h5 class="card-title"><span>Gestion</h5></span>
-                            <p class="card-text">La page de gestion des clients permet aux utilisateurs de gérer leurs clients et projets efficacement.</p>
+                            <h5 class="card-title"><span>Calendrier</h5></span>
+                            <p class="card-text">La page calendrier permet aux utilisateurs de visualiser et de gérer leurs projets efficacement à l’aide d’un graphique.</p>
                         </div>
                     </div>
                 </div>
