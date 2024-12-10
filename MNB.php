@@ -68,44 +68,6 @@ if (isset($_SESSION['user_id'])) {
                 <img src="mnb.jpeg" alt="MNB Logo" style="width: 50px; height: 50px; object-fit: contain; margin-right: 15px;">
                 <a href="MNB.php" class="text-white text-decoration-none"><h1 class="h3 mb-0">MNB</h1></a>
             </div>
-            <!-- Menu de navigation -->
-            <nav>
-                <ul class="nav">
-                    <li class="nav-item dropdown">
-                        <button class="btn btn-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">Produit</button>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#">Documents</a></li>
-                            <li><a class="dropdown-item" href="#">Projets</a></li>
-                            <li><a class="dropdown-item" href="#">Calendrier</a></li>
-                        </ul>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <button class="btn btn-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">Ressources</button>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#">Blog</a></li>
-                            <li><a class="dropdown-item" href="#">MNB Académie</a></li>
-                            <li><a class="dropdown-item" href="#">Site d'aide</a></li>
-                        </ul>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <button class="btn btn-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">Solution</button>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#">Grandes Entreprises</a></li>
-                            <li><a class="dropdown-item" href="#">Petites équipes et PME</a></li>
-                            <li><a class="dropdown-item" href="#">Individuel</a></li>
-                        </ul>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <button class="btn btn-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">Télécharger</button>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#">MNB</a></li>
-                            <li><a class="dropdown-item" href="#">MNB Calendrier</a></li>
-                            <li><a class="dropdown-item" href="#">Clipper</a></li>
-                        </ul>
-                    </li>
-                    <li class="nav-item"><a href="#" class="nav-link text-white">Tarifs</a></li>
-                </ul>
-            </nav>
             <!-- Section utilisateur -->
             <div class="d-flex align-items-center">
                 <?php if ($user_info): ?>
@@ -116,7 +78,7 @@ if (isset($_SESSION['user_id'])) {
                         <?php endif; ?>
                     </span>
                     <!-- Redirection selon le statut de l'utilisateur -->
-                    <a href="<?= ($_SESSION['statu'] === 'Admin') ? 'dashboard.php' : 'gestion_projet.php'; ?>" class="btn btn-light me-2">
+                    <a href="gestion_projet.php" class="btn btn-light me-2">
                         <?= ($_SESSION['statu'] === 'Admin') ? 'Admin' : 'Espace client'; ?>
                     </a>
                     <a href="compte.php" class="btn btn-outline-light ms-2">Compte</a>

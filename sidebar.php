@@ -7,20 +7,6 @@
         </a>
     </div>
     <ul class="nav-links">
-        <?php if ($_SESSION['statu'] === 'Admin'): ?>
-            <li>
-                <a href="dashboard.php">
-                    <i class="bx bx-grid-alt"></i>
-                    <span class="links_name">Dashboard</span>
-                </a>
-            </li>
-            <li>
-                <a href="indicateur.php">
-                    <i class="bx bx-pie-chart-alt-2"></i>
-                    <span class="links_name">Indicateur clés</span>
-                </a>
-            </li>
-        <?php endif; ?>
         <li>
             <a href="projet.php">
                 <i class="bx bx-box"></i>
