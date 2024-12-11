@@ -66,7 +66,7 @@ if (isset($_SESSION['user_id'])) {
             <!-- Logo intégré -->
             <div class="d-flex align-items-center">
                 <img src="mnb.jpeg" alt="MNB Logo" style="width: 50px; height: 50px; object-fit: contain; margin-right: 15px;">
-                <a href="MNB.php" class="text-white text-decoration-none"><h1 class="h3 mb-0">MNB</h1></a>
+                <a href="index.php" class="text-white text-decoration-none"><h1 class="h3 mb-0">MNB</h1></a>
             </div>
             <!-- Section utilisateur -->
             <div class="d-flex align-items-center">
@@ -146,7 +146,7 @@ if (isset($_SESSION['user_id'])) {
                 if (xhr.status === 200) {
                     const response = JSON.parse(xhr.responseText);
                     if (response.success) {
-                        window.location.href = 'MNB.php';
+                        window.location.href = 'index.php';
                     } else {
                         document.getElementById('error-message').innerText = response.message;
                     }

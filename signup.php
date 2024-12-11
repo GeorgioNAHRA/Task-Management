@@ -59,7 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $_SESSION['mail'] = $mail;
                 $_SESSION['statu'] = $Statu; // Définit la clé statu dans la session.
                 $_SESSION['photo'] = $photo; // Définit également la photo dans la session.
-                header('Location: MNB.php');
+                header('Location: index.php');
                 exit();
             } else {
                 $error_message = 'Une erreur s\'est produite lors de l\'inscription : ' . mysqli_error($connection);
@@ -86,7 +86,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <!-- Intégration du logo -->
             <div class="d-flex align-items-center">
                 <img src="mnb.jpeg" alt="MNB Logo" style="width: 50px; height: 50px; object-fit: contain; margin-right: 15px;">
-                <a href="MNB.php" class="text-white text-decoration-none"><h1 class="h3 mb-0">MNB</h1></a>
+                <a href="index.php" class="text-white text-decoration-none"><h1 class="h3 mb-0">MNB</h1></a>
             </div>
             <nav>
                 <ul class="nav">
