@@ -190,7 +190,6 @@ if (isset($_SESSION['user_id'])) {
             <div class="col-md-6">
                 <label for="password" class="form-label">Mot de passe</label>
                 <input type="password" class="form-control" id="password" name="password" placeholder="Nouveau mot de passe">
-                <small class="text-muted">Laissez vide pour conserver votre mot de passe actuel.</small>
             </div>
             <div class="col-12 d-flex justify-content-start gap-2">
                 <button type="submit" class="btn btn-primary">Enregistrer</button>
