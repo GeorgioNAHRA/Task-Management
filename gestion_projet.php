@@ -160,7 +160,7 @@ if (isset($_POST['supprimer_projet'])) {
                                     <th>Projet</th>
                                     <th>Titre</th>
                                     <th>Description</th>
-                                    <th>Assigné à</th>
+                                    <th>Assigné</th>
                                     <th>Date d'échéance</th>
                                 </tr>
                             </thead>
