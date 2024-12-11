@@ -16,18 +16,6 @@ $user_info = [
     'id_user' => $_SESSION['user_id']
 ];
 
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "MNB_data";
-
-// Connexion à la base de données
-$conn = new mysqli($servername, $username, $password, $dbname);
-
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
-
 // Vérifier si un ID projet est fourni
 if (!isset($_GET['id'])) {
     echo "Aucun projet sélectionné.";

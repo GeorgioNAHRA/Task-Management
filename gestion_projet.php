@@ -17,17 +17,6 @@ $user_info = [
     'id_user' => $_SESSION['user_id']
 ];
 
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "MNB_data";
-
-// Connexion à la base de données
-$conn = new mysqli($servername, $username, $password, $dbname);
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
-
 // Récupérer les alertes des tâches en retard ou à échéance
 $current_date = date('Y-m-d');
 $user_id = $_SESSION['user_id'];

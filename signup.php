@@ -12,7 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Vérification de l'unicité de l'email
     $query_check_email = "SELECT * FROM Utilisateur WHERE Email = ?";
-    $stmt_check_email = mysqli_prepare($connection, $query_check_email);
+    $stmt_check_email = mysqli_prepare($conn, $query_check_email);
     mysqli_stmt_bind_param($stmt_check_email, "s", $mail);
     mysqli_stmt_execute($stmt_check_email);
     $result_check_email = mysqli_stmt_get_result($stmt_check_email);
@@ -48,11 +48,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             // Insertion dans la base de données
             $query = "INSERT INTO Utilisateur (Email, MDP, Nom, Prenom, Statu, photo) VALUES (?, ?, ?, ?, ?, ?)";
-            $stmt = mysqli_prepare($connection, $query);
+            $stmt = mysqli_prepare($conn, $query);
             mysqli_stmt_bind_param($stmt, "ssssss", $mail, $hashed_password, $nom, $prenom, $Statu, $photo);
 
             if (mysqli_stmt_execute($stmt)) {
-                $userId = mysqli_insert_id($connection);
+                $userId = mysqli_insert_id($conn);
                 $_SESSION['user_id'] = $userId;
                 $_SESSION['nom'] = $nom;
                 $_SESSION['prenom'] = $prenom;
@@ -62,7 +62,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 header('Location: index.php');
                 exit();
             } else {
-                $error_message = 'Une erreur s\'est produite lors de l\'inscription : ' . mysqli_error($connection);
+                $error_message = 'Une erreur s\'est produite lors de l\'inscription : ' . mysqli_error($conn);
             }
         }
     }

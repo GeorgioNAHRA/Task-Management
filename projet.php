@@ -17,17 +17,6 @@ $user_info = [
     'id_user' => $_SESSION['user_id']
 ];
 
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "MNB_data";
-
-// Connexion à la base de données
-$conn = new mysqli($servername, $username, $password, $dbname);
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
-
 // Création du projet
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $statu = $_POST['statu'] ?? 'En cours'; // Récupérer le statut ou utiliser "En cours" par défaut

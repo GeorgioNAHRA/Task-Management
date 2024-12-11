@@ -8,7 +8,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Requête pour récupérer l'utilisateur par e-mail
     $query_user = "SELECT * FROM Utilisateur WHERE Email = ?";
-    $stmt_user = mysqli_prepare($connection, $query_user);
+    $stmt_user = mysqli_prepare($conn, $query_user);
     mysqli_stmt_bind_param($stmt_user, "s", $mail);
     mysqli_stmt_execute($stmt_user);
     $result_user = mysqli_stmt_get_result($stmt_user);
@@ -38,7 +38,7 @@ if (isset($_SESSION['user_id'])) {
     $user_id = $_SESSION['user_id'];
 
     $query = "SELECT * FROM Utilisateur WHERE IDUser = ?";
-    $stmt = mysqli_prepare($connection, $query);
+    $stmt = mysqli_prepare($conn, $query);
     mysqli_stmt_bind_param($stmt, "s", $user_id);
     mysqli_stmt_execute($stmt);
     $result = mysqli_stmt_get_result($stmt);

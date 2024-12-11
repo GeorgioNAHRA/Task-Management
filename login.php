@@ -12,7 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Récupérer l'utilisateur avec l'e-mail fourni
     $query_user = "SELECT * FROM Utilisateur WHERE Email = ?";
-    $stmt_user = mysqli_prepare($connection, $query_user);
+    $stmt_user = mysqli_prepare($conn, $query_user);
     mysqli_stmt_bind_param($stmt_user, "s", $mail);
     mysqli_stmt_execute($stmt_user);
     $result_user = mysqli_stmt_get_result($stmt_user);

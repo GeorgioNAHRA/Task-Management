@@ -17,17 +17,6 @@
        'id_user' => $_SESSION['user_id']
    ];
    
-   // Connexion à la base de données
-   $servername = "localhost";
-   $username = "root";
-   $password = "";
-   $dbname = "MNB_data";
-   
-   $conn = new mysqli($servername, $username, $password, $dbname);
-   if ($conn->connect_error) {
-       die("Connection failed: " . $conn->connect_error);
-   }
-   
    // Initialisation
    $projet = null;
    $taches = [];

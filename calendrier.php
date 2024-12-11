@@ -17,17 +17,6 @@ $user_info = [
     'id_user' => $_SESSION['user_id']
 ];
 
-$hostname = "localhost";
-$username = "root";
-$password = "";
-$database = "mnb_data";
-
-// Connexion à la base de données
-$connection = mysqli_connect($hostname, $username, $password, $database);
-if (!$connection) {
-    die("Erreur de connexion à la base de données: " . mysqli_connect_error());
-}
-
 // Charger les tâches depuis la base de données
 $taches = [];
 if ($user_info['statu'] === 'Admin') {
@@ -39,7 +28,7 @@ if ($user_info['statu'] === 'Admin') {
     $sql = "SELECT * FROM Tache WHERE FIND_IN_SET('$user_id', IDUser)";
 }
 
-$result = $connection->query($sql);
+$result = $conn->query($sql);
 if ($result->num_rows > 0) {
     while ($row = $result->fetch_assoc()) {
         $taches[] = $row;

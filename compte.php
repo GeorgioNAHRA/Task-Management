@@ -12,7 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (isset($_POST['delete_photo'])) {
             // Suppression de la photo actuelle
             $query = "SELECT photo FROM Utilisateur WHERE IDUser = ?";
-            $stmt = mysqli_prepare($connection, $query);
+            $stmt = mysqli_prepare($conn, $query);
             mysqli_stmt_bind_param($stmt, "s", $user_id);
             mysqli_stmt_execute($stmt);
             $result = mysqli_stmt_get_result($stmt);
@@ -28,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             $default_photo = 'default.png';
             $update_photo_query = "UPDATE Utilisateur SET photo=? WHERE IDUser=?";
-            $update_photo_stmt = mysqli_prepare($connection, $update_photo_query);
+            $update_photo_stmt = mysqli_prepare($conn, $update_photo_query);
             mysqli_stmt_bind_param($update_photo_stmt, "ss", $default_photo, $user_id);
             mysqli_stmt_execute($update_photo_stmt);
             header('Location: compte.php?photo_deleted=1');
@@ -42,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Vérification de l'unicité de l'e-mail
         $query_check_email = "SELECT * FROM Utilisateur WHERE Email = ? AND IDUser != ?";
-        $stmt_check_email = mysqli_prepare($connection, $query_check_email);
+        $stmt_check_email = mysqli_prepare($conn, $query_check_email);
         mysqli_stmt_bind_param($stmt_check_email, "ss", $mail, $user_id);
         mysqli_stmt_execute($stmt_check_email);
         $result_check_email = mysqli_stmt_get_result($stmt_check_email);
@@ -52,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
             // Mise à jour des informations dans la base de données
             $query = "UPDATE Utilisateur SET Nom=?, Prenom=?, Email=? WHERE IDUser=?";
-            $stmt = mysqli_prepare($connection, $query);
+            $stmt = mysqli_prepare($conn, $query);
             mysqli_stmt_bind_param($stmt, "ssss", $nom, $prenom, $mail, $user_id);
 
             if (mysqli_stmt_execute($stmt)) {
@@ -69,7 +69,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                     // Suppression de l'ancienne photo si elle n'est pas par défaut
                     $query = "SELECT photo FROM Utilisateur WHERE IDUser = ?";
-                    $stmt = mysqli_prepare($connection, $query);
+                    $stmt = mysqli_prepare($conn, $query);
                     mysqli_stmt_bind_param($stmt, "s", $user_id);
                     mysqli_stmt_execute($stmt);
                     $result = mysqli_stmt_get_result($stmt);
@@ -86,7 +86,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     // Upload de la nouvelle photo
                     if (move_uploaded_file($_FILES['photo']['tmp_name'], $uploaded_file)) {
                         $update_photo_query = "UPDATE Utilisateur SET photo=? WHERE IDUser=?";
-                        $update_photo_stmt = mysqli_prepare($connection, $update_photo_query);
+                        $update_photo_stmt = mysqli_prepare($conn, $update_photo_query);
                         mysqli_stmt_bind_param($update_photo_stmt, "ss", $photo, $user_id);
                         mysqli_stmt_execute($update_photo_stmt);
                     } else {
@@ -100,7 +100,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $hashed_password = password_hash($new_password, PASSWORD_BCRYPT);
 
                     $update_password_query = "UPDATE Utilisateur SET MDP=? WHERE IDUser=?";
-                    $stmt_password = mysqli_prepare($connection, $update_password_query);
+                    $stmt_password = mysqli_prepare($conn, $update_password_query);
                     mysqli_stmt_bind_param($stmt_password, "ss", $hashed_password, $user_id);
 
                     if (!mysqli_stmt_execute($stmt_password)) {
@@ -122,7 +122,7 @@ $user_info = null;
 if (isset($_SESSION['user_id'])) {
     $user_id = $_SESSION['user_id'];
     $query = "SELECT * FROM Utilisateur WHERE IDUser = ?";
-    $stmt = mysqli_prepare($connection, $query);
+    $stmt = mysqli_prepare($conn, $query);
     mysqli_stmt_bind_param($stmt, "s", $user_id);
     mysqli_stmt_execute($stmt);
     $result = mysqli_stmt_get_result($stmt);

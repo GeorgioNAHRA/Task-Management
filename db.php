@@ -5,9 +5,9 @@ $username = "root";
 $password = "";
 $database = "mnb_data";
 
-$connection = mysqli_connect($hostname, $username, $password, $database);
+$conn = mysqli_connect($hostname, $username, $password, $database);
 
-if (!$connection) {
+if (!$conn) {
     die("Erreur de connexion à la base de données: " . mysqli_connect_error());
 }
 ?>
