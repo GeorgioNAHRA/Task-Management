@@ -180,7 +180,7 @@
       <link rel="stylesheet" href="css/dashboard.css" />
       <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />
       <link href="https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css" rel="stylesheet" />
-      <link rel="stylesheet" href="css/plan.css">
+      <link rel="stylesheet" href="css/manage_project.css">
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <style>
          .file-upload {
@@ -199,7 +199,7 @@
    <body>
       <?php include('sidebar.php'); ?>
       <section class="home-section">
-         <?php include('header_gestion.php'); ?>
+         <?php include('header_management.php'); ?>
          <div class="home-content">
             <div class="project-details">
                <h2><strong>Nom du Projet :</strong> <?= htmlspecialchars($projet['nomProjet']) ?></h2>

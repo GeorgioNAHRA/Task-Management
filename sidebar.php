@@ -8,7 +8,7 @@
     </div>
     <ul class="nav-links">
         <li>
-            <a href="projet.php">
+            <a href="project.php">
                 <i class="bx bx-box"></i>
                 <span class="links_name">Création Projet</span>
             </a>

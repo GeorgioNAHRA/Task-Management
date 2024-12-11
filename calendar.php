@@ -46,7 +46,7 @@ if ($result->num_rows > 0) {
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css" rel="stylesheet">
     <link href="https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="css/calendrier.css">
+    <link rel="stylesheet" href="css/calendar.css">
     <script type="text/javascript" src="js/sidebar.js"></script>
     <script>
         var tasks = <?php echo json_encode($taches); ?>;
@@ -60,7 +60,7 @@ if ($result->num_rows > 0) {
     <!-- Main Content -->
     <section class="home-section">
         <!-- Header -->
-        <?php include('header_gestion.php'); ?>
+        <?php include('header_management.php'); ?>
 
         <div class="home-content">
             <div class="calendar-container">
@@ -83,7 +83,7 @@ if ($result->num_rows > 0) {
                 <p><strong>Utilisateurs associés :</strong> <span id="taskUsers"></span></p>
             </div>
             <div class="modal-footer">
-                <form method="post" action="plan.php" id="manageTaskForm">
+                <form method="post" action="manage_project.php" id="manageTaskForm">
                     <input type="hidden" name="id_tache" id="taskId">
                     <button type="submit" class="btn btn-primary">Gérer</button>
                 </form>

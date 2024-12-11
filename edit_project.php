@@ -84,7 +84,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body>
     <?php include('sidebar.php'); ?>
     <section class="home-section">
-    <?php include('header_gestion.php'); ?>
+    <?php include('header_management.php'); ?>
         <div class="home-content">
             <div class="container mt-4">
                 <h2>Modifier le Projet</h2>
