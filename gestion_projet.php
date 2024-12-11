@@ -158,7 +158,6 @@ if (isset($_POST['supprimer_projet'])) {
                             <thead>
                                 <tr>
                                     <th>Projet</th>
-                                    <th>ID Tâche</th>
                                     <th>Titre</th>
                                     <th>Description</th>
                                     <th>Assigné à</th>
@@ -169,7 +168,6 @@ if (isset($_POST['supprimer_projet'])) {
                                 <?php while ($tache = $alert_taches->fetch_assoc()): ?>
                                     <tr>
                                         <td><?= htmlspecialchars($tache['nomProjet']) ?></td>
-                                        <td><?= htmlspecialchars($tache['IDTache']) ?></td>
                                         <td><?= htmlspecialchars($tache['Titre']) ?></td>
                                         <td><?= htmlspecialchars($tache['description']) ?></td>
                                         <td><?= htmlspecialchars($tache['Prenom'] . ' ' . $tache['Nom']) ?></td>

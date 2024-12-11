@@ -227,7 +227,6 @@
                   <table class="table table-striped">
                      <thead>
                         <tr>
-                           <th>ID</th>
                            <th>Titre</th>
                            <th>Description</th>
                            <th>Projet</th>
@@ -238,7 +237,6 @@
                      <tbody>
                         <?php while ($tache = $alert_taches->fetch_assoc()): ?>
                         <tr>
-                           <td><?= htmlspecialchars($tache['IDTache']) ?></td>
                            <td><?= htmlspecialchars($tache['Titre']) ?></td>
                            <td><?= htmlspecialchars($tache['description']) ?></td>
                            <td><?= htmlspecialchars($tache['nomProjet']) ?></td>
