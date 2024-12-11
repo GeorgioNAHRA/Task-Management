@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Dec 10, 2024 at 06:01 PM
+-- Generation Time: Dec 11, 2024 at 09:12 AM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -80,8 +80,8 @@ CREATE TABLE `Projet` (
 --
 
 INSERT INTO `Projet` (`IDProjet`, `nomProjet`, `Duree_projet`, `descriptionProjet`, `IDTache`, `Statu`, `budget`, `IDUsers`) VALUES
-(18, 'Tesy', '10', 'slides', NULL, 'En cours', 122, '1'),
-(19, 'dflsd', '13', 'sds', NULL, 'En cours', 134, '1');
+(18, 'Gestions des plats', '16', 'Management des plats dans un restaurant', NULL, 'En cours', 1692, '1'),
+(19, 'Gestion des quantités des produits', '21', 'Les stocks des produits a vendre', NULL, 'En cours', 13340, '1');
 
 -- --------------------------------------------------------
 
@@ -105,7 +105,8 @@ CREATE TABLE `Tache` (
 
 INSERT INTO `Tache` (`IDTache`, `Titre`, `description`, `datedebut`, `datefin`, `IDUser`, `IDProjet`) VALUES
 (61666, 'Configuration de la base de données', 'Concevoir le schéma de la base de données et implémenter les tables, relations et procédures nécessaires', '2024-12-08', '2024-12-13', '1', 18),
-(61667, 'Implémentation de l’authentification', 'Ajouter un système d’authentification sécurisé avec gestion des rôles et permissions', '2024-12-12', '2024-12-15', '1', 19);
+(61667, 'Implémentation de l’authentification', 'Ajouter un système d’authentification sécurisé avec gestion des rôles et permissions', '2024-12-08', '2024-12-10', '1', 19),
+(61668, 'dd', 'dd', '2024-12-02', '2024-12-08', '1', 20);
 
 -- --------------------------------------------------------
 
@@ -161,8 +162,7 @@ ALTER TABLE `Projet`
 -- Indexes for table `Tache`
 --
 ALTER TABLE `Tache`
-  ADD PRIMARY KEY (`IDTache`),
-  ADD UNIQUE KEY `Tache_AK` (`IDUser`,`IDProjet`) USING HASH;
+  ADD PRIMARY KEY (`IDTache`);
 
 --
 -- Indexes for table `Utilisateur`
@@ -184,19 +184,19 @@ ALTER TABLE `ChatMessages`
 -- AUTO_INCREMENT for table `Files`
 --
 ALTER TABLE `Files`
-  MODIFY `IDFile` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `IDFile` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `Projet`
 --
 ALTER TABLE `Projet`
-  MODIFY `IDProjet` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `IDProjet` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT for table `Tache`
 --
 ALTER TABLE `Tache`
-  MODIFY `IDTache` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=61668;
+  MODIFY `IDTache` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=61674;
 
 --
 -- AUTO_INCREMENT for table `Utilisateur`
