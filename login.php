@@ -1,16 +1,14 @@
 <?php
-session_start();
-include('../MNB/db.php');
-
-header('Content-Type: application/json');
-
-$response = array();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+include('db.php');
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $mail = $_POST['mail'];
-    $password = $_POST['password'];
+    $mail = trim($_POST['mail']);
+    $password = trim($_POST['password']);
 
-    // Récupérer l'utilisateur avec l'e-mail fourni
+    // Requête pour récupérer l'utilisateur par e-mail
     $query_user = "SELECT * FROM Utilisateur WHERE Email = ?";
     $stmt_user = mysqli_prepare($conn, $query_user);
     mysqli_stmt_bind_param($stmt_user, "s", $mail);
@@ -18,31 +16,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $result_user = mysqli_stmt_get_result($stmt_user);
 
     if ($user = mysqli_fetch_assoc($result_user)) {
-        // Vérification du mot de passe haché
+        // Vérifier le mot de passe haché
         if (password_verify($password, $user['MDP'])) {
+            // Stocker les données utilisateur dans la session
             $_SESSION['user_id'] = $user['IDUser'];
             $_SESSION['nom'] = $user['Nom'];
             $_SESSION['prenom'] = $user['Prenom'];
             $_SESSION['mail'] = $user['Email'];
             $_SESSION['statu'] = $user['Statu'];
+            $_SESSION['photo'] = $user['photo'];
 
-            if ($user['Statu'] === 'Admin') {
-                $_SESSION['admin_id'] = $user['IDUser'];
-            }
-
-            $response['status'] = 'success';
+            // Rediriger vers index.php après une connexion réussie
+            header('Location: index.php');
+            exit();
         } else {
-            $response['status'] = 'error';
-            $response['message'] = 'Mot de passe incorrect.';
+            $error_message = 'Mot de passe incorrect.';
         }
     } else {
-        $response['status'] = 'error';
-        $response['message'] = 'Utilisateur non trouvé.';
+        $error_message = 'Utilisateur non trouvé.';
     }
-} else {
-    $response['status'] = 'error';
-    $response['message'] = 'Méthode non autorisée.';
 }
-
-echo json_encode($response);
 ?>

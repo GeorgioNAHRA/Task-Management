@@ -15,20 +15,20 @@
         </li>
         <?php if ($_SESSION['statu'] === 'Admin'): ?>
             <li>
-                <a href="gestion_client.php">
+                <a href="user_management.php">
                     <i class="bx bx-user"></i>
                     <span class="links_name">Gestion Clients</span>
                 </a>
             </li>
         <?php endif; ?>
         <li>
-            <a href="gestion_projet.php">
+            <a href="project_management.php">
                 <i class="bx bx-task"></i>
                 <span class="links_name">Gestion Projets</span>
             </a>
         </li>
         <li>
-                <a href="calendrier.php">
+                <a href="calendar.php">
                     <i class="bx bx-coin-stack"></i>
                     <span class="links_name">Calendrier</span>
                 </a>

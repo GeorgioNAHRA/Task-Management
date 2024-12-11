@@ -54,7 +54,7 @@ function afficherProjets($conn, $user_id) {
             echo '</td>';
             echo '<td>';
             // Boutons Modifier et Supprimer
-            echo '<form method="get" action="modifier_projet.php" style="display:inline-block; margin-right: 10px;">
+            echo '<form method="get" action="edit_project.php" style="display:inline-block; margin-right: 10px;">
                     <input type="hidden" name="id" value="' . $row["IDProjet"] . '">
                     <button type="submit" class="btn btn-warning">Modifier</button>
                   </form>';

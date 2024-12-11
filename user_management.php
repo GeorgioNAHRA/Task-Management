@@ -53,7 +53,7 @@ function afficherProjetsEnCours($conn) {
             echo '<form method="post" action="projet.php" style="display:inline-block;"><input type="hidden" name="projet_id" value="' . $row["IDProjet"] . '"><button type="submit" class="btn btn-info">Gérer</button></form>';
             echo '</td>';
             echo '<td>';
-            echo '<form method="get" action="modifier_projet.php" style="display:inline-block; margin-right: 10px;">';
+            echo '<form method="get" action="edit_project.php" style="display:inline-block; margin-right: 10px;">';
             echo '<input type="hidden" name="id" value="' . $row["IDProjet"] . '">';
             echo '<button type="submit" class="btn btn-warning">Modifier</button>';
             echo '</form>';

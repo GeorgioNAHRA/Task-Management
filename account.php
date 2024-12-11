@@ -1,7 +1,6 @@
 <?php
 session_start();
-include 'db.php';
-
+include('db.php');
 $error_message = '';
 
 // Gestion des soumissions du formulaire
@@ -31,7 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $update_photo_stmt = mysqli_prepare($conn, $update_photo_query);
             mysqli_stmt_bind_param($update_photo_stmt, "ss", $default_photo, $user_id);
             mysqli_stmt_execute($update_photo_stmt);
-            header('Location: compte.php?photo_deleted=1');
+            header('Location: account.php?photo_deleted=1');
             exit();
         }
 
@@ -62,12 +61,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $photo = uniqid() . '_' . basename($_FILES['photo']['name']);
                     $uploaded_file = $upload_dir . $photo;
 
-                    // Création du dossier si nécessaire
                     if (!is_dir($upload_dir)) {
                         mkdir($upload_dir, 0777, true);
                     }
 
-                    // Suppression de l'ancienne photo si elle n'est pas par défaut
                     $query = "SELECT photo FROM Utilisateur WHERE IDUser = ?";
                     $stmt = mysqli_prepare($conn, $query);
                     mysqli_stmt_bind_param($stmt, "s", $user_id);
@@ -83,7 +80,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         }
                     }
 
-                    // Upload de la nouvelle photo
                     if (move_uploaded_file($_FILES['photo']['tmp_name'], $uploaded_file)) {
                         $update_photo_query = "UPDATE Utilisateur SET photo=? WHERE IDUser=?";
                         $update_photo_stmt = mysqli_prepare($conn, $update_photo_query);
@@ -94,7 +90,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     }
                 }
 
-                // Mise à jour du mot de passe si un nouveau est fourni
                 if (isset($_POST['password']) && !empty($_POST['password'])) {
                     $new_password = trim($_POST['password']);
                     $hashed_password = password_hash($new_password, PASSWORD_BCRYPT);
@@ -108,7 +103,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     }
                 }
 
-                header('Location: compte.php?success=1');
+                header('Location: account.php?success=1');
                 exit();
             } else {
                 $error_message = 'Une erreur s\'est produite lors de la mise à jour des informations.';
@@ -117,7 +112,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-// Récupération des informations utilisateur si connecté
 $user_info = null;
 if (isset($_SESSION['user_id'])) {
     $user_id = $_SESSION['user_id'];
@@ -129,6 +123,7 @@ if (isset($_SESSION['user_id'])) {
     $user_info = mysqli_fetch_assoc($result);
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -154,9 +149,26 @@ if (isset($_SESSION['user_id'])) {
                             <img src="pdp/<?php echo htmlspecialchars($user_info['photo']); ?>" alt="Profile Picture" class="rounded-circle" style="width: 30px; height: 30px; object-fit: cover;">
                         <?php endif; ?>
                     </span>
+                    <a href="project_management.php" class="btn btn-light me-2">
+                        <?= ($_SESSION['statu'] === 'Admin') ? 'Admin' : 'Espace client'; ?>
+                    </a>
+                    <a href="account.php" class="btn btn-outline-light ms-2">Compte</a>
                     <a href="logout.php" class="btn btn-outline-light ms-2">Se déconnecter</a>
                 <?php else: ?>
-                    <a href="signup.php" class="btn btn-light">S'inscrire</a>
+                    <button class="btn btn-outline-light me-1" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">Se connecter</button>
+                    <div class="dropdown-menu p-4">
+                        <form method="post" action="login.php">
+                            <div class="mb-3">
+                                <label for="exampleDropdownFormEmail2" class="form-label">Adresse email</label>
+                                <input type="email" class="form-control" id="exampleDropdownFormEmail2" name="mail" placeholder="email@example.com" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="exampleDropdownFormPassword2" class="form-label">Mot de passe</label>
+                                <input type="password" class="form-control" id="exampleDropdownFormPassword2" name="password" placeholder="Mot de passe" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Se connecter</button>
+                        </form>
+                    </div>
                 <?php endif; ?>
             </div>
         </div>
