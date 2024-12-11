@@ -136,24 +136,6 @@ if (isset($_SESSION['user_id'])) {
     <?php include('footer.php'); ?>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        document.getElementById('loginForm').addEventListener('submit', function(event) {
-            event.preventDefault();
-            const formData = new FormData(this);
-            const xhr = new XMLHttpRequest();
-            xhr.open('POST', '', true);
-            xhr.onload = function() {
-                if (xhr.status === 200) {
-                    const response = JSON.parse(xhr.responseText);
-                    if (response.success) {
-                        window.location.href = 'index.php';
-                    } else {
-                        document.getElementById('error-message').innerText = response.message;
-                    }
-                }
-            };
-            xhr.send(formData);
-        });
-    </script>
+    <script src="index.js"></script>
 </body>
 </html>

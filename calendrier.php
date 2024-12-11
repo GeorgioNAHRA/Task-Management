@@ -57,85 +57,12 @@ if ($result->num_rows > 0) {
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css" rel="stylesheet">
     <link href="https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f8f9fa;
-            margin: 0;
-            padding: 0;
-        }
-        .home-content {
-            padding: 20px;
-        }
-        .calendar-container {
-            background-color: #fff;
-            padding: 20px;
-            margin-top: 20px;
-            border-radius: 10px;
-            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
-        }
-        .fc-toolbar-title {
-            font-size: 22px;
-            color: #6c63ff;
-            text-transform: uppercase;
-            text-align: center;
-        }
-        .fc-button {
-            background-color: #6c63ff;
-            color: #fff;
-            border-radius: 5px;
-            border: none;
-        }
-        .fc-button:hover {
-            background-color: #5548c8;
-        }
-        .fc-day-today {
-            background-color: #e8f7ff;
-        }
-        .fc-event {
-            background-color: #6c63ff;
-            color: #fff;
-            border-radius: 5px;
-        }
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 999;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0, 0, 0, 0.4);
-        }
-        .modal-content {
-            background-color: #fff;
-            margin: 15% auto;
-            padding: 20px;
-            border: 1px solid #888;
-            border-radius: 10px;
-            width: 50%;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
-        }
-        .modal-header {
-            font-size: 20px;
-            font-weight: bold;
-            text-align: center;
-        }
-        .close {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-        .close:hover,
-        .close:focus {
-            color: black;
-            text-decoration: none;
-            cursor: pointer;
-        }
-    </style>
+    <link rel="stylesheet" href="Calendrier.css">
+    <script type="text/javascript" src="sidebar.js"></script>
+    <script>
+        var tasks = <?php echo json_encode($taches); ?>;
+    </script>
+    <script src="calendrier.js"></script>
 </head>
 <body>
     <!-- Sidebar -->
@@ -178,69 +105,5 @@ if ($result->num_rows > 0) {
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            var calendarEl = document.getElementById('calendar');
-            var tasks = <?php echo json_encode($taches); ?>;
-
-            var calendar = new FullCalendar.Calendar(calendarEl, {
-                initialView: 'dayGridMonth',
-                locale: 'fr',
-                headerToolbar: {
-                    left: 'prev,next today',
-                    center: 'title',
-                    right: 'dayGridMonth,timeGridWeek,timeGridDay'
-                },
-                buttonText: {
-                    today: 'Aujourd\'hui',
-                    month: 'Mois',
-                    week: 'Semaine',
-                    day: 'Jour',
-                    list: 'Liste'
-                },
-                events: tasks.map(task => ({
-                    id: task.IDTache,
-                    title: task.Titre,
-                    start: task.datedebut,
-                    end: task.datefin
-                })),
-                eventClick: function(info) {
-                    var task = tasks.find(t => t.IDTache == info.event.id);
-                    document.getElementById('taskTitle').innerText = task.Titre;
-                    document.getElementById('taskDescription').innerText = task.description;
-                    document.getElementById('taskStart').innerText = task.datedebut;
-                    document.getElementById('taskEnd').innerText = task.datefin;
-                    document.getElementById('taskUsers').innerText = task.IDUser || 'Aucun utilisateur';
-                    document.getElementById('taskId').value = task.IDTache;
-
-                    document.getElementById('taskModal').style.display = 'block';
-                }
-            });
-            calendar.render();
-
-            var modal = document.getElementById("taskModal");
-            var closeModal = document.getElementsByClassName("close")[0];
-            closeModal.onclick = function() {
-                modal.style.display = "none";
-            };
-            window.onclick = function(event) {
-                if (event.target == modal) {
-                    modal.style.display = "none";
-                }
-            };
-        });
-
-        // Script pour gérer le sidebar
-        let sidebar = document.querySelector(".sidebar");
-        let sidebarBtn = document.querySelector(".sidebarBtn");
-        sidebarBtn.onclick = function() {
-            sidebar.classList.toggle("active");
-            if (sidebar.classList.contains("active")) {
-                sidebarBtn.classList.replace("bx-menu", "bx-menu-alt-right");
-            } else {
-                sidebarBtn.classList.replace("bx-menu-alt-right", "bx-menu");
-            }
-        };
-    </script>
 </body>
 </html>

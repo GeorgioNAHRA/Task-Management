@@ -1,0 +1,48 @@
+.home-content {
+    padding: 20px;
+}
+
+/* Section des alertes */
+.alert-warning {
+    background-color: #fff3cd;
+    border-color: #ffeeba;
+    color: #856404;
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 30px;
+}
+
+.table-striped > tbody > tr:nth-of-type(odd) {
+    background-color: #f9f9f9;
+}
+
+.table thead th {
+    text-align: left;
+    font-weight: bold;
+    background-color: #ffc107;
+    color: #fff;
+}
+
+/* Section des projets */
+.projects-section {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    margin-top: 30px;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+}
+
+.projects-section h2 {
+    color: #333;
+    margin-bottom: 15px;
+}
+
+.projects-section table thead th {
+    background-color: #f8f9fa;
+    color: #333;
+    border-bottom: 2px solid #ddd;
+}
+
+.projects-section table tbody tr td {
+    color: #333;
+}

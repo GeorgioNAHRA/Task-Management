@@ -215,6 +215,8 @@ if (isset($_POST['supprimer_projet'])) {
     <link rel="stylesheet" href="dashboard.css" />
     <!-- Boxicons CDN Link -->
     <link href="https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="gestion_client.css">
+    <script type="text/javascript" src="sidebar.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 </head>
 <body>
@@ -240,93 +242,6 @@ if (isset($_POST['supprimer_projet'])) {
             </div>
         </div>
     </section>
-
-    <script>
-        let sidebar = document.querySelector(".sidebar");
-        let sidebarBtn = document.querySelector(".sidebarBtn");
-        sidebarBtn.onclick = function () {
-            sidebar.classList.toggle("active");
-            if (sidebar.classList.contains("active")) {
-                sidebarBtn.classList.replace("bx-menu", "bx-menu-alt-right");
-            } else sidebarBtn.classList.replace("bx-menu-alt-right", "bx-menu");
-            }
-    </script>
-
-    <style>
-        /* Styles pour le contenu de la page */
-        .home-content {
-            padding: 20px;
-        }
-
-        .users-table,
-        .projects-table {
-            background: #fff;
-            padding: 20px;
-            margin-top: 20px;
-            border-radius: 10px;
-            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .users-table h2,
-        .projects-table h2 {
-            margin-bottom: 20px;
-            font-size: 22px;
-            font-weight: 500;
-            color: #333;
-        }
-
-        .users-table table,
-        .projects-table table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        .users-table table thead tr,
-        .projects-table table thead tr {
-            background: #2B3A42;
-            color: #fff;
-            text-align: left;
-        }
-
-        .users-table table th,
-        .users-table table td,
-        .projects-table table th,
-        .projects-table table td {
-            padding: 12px 15px;
-            border-bottom: 1px solid #ddd;
-        }
-
-        .users-table table tbody tr:hover,
-        .projects-table table tbody tr:hover {
-            background: #f1f1f1;
-        }
-
-        .users-table button,
-        .projects-table button {
-            background: #2B3A42;
-            color: #fff;
-            border: none;
-            padding: 8px 12px;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background 0.3s ease;
-        }
-
-        .users-table button:hover,
-        .projects-table button:hover {
-            background: #0e98e6;
-        }
-    </style>
-        <script>
-        let sidebar = document.querySelector(".sidebar");
-        let sidebarBtn = document.querySelector(".sidebarBtn");
-        sidebarBtn.onclick = function () {
-            sidebar.classList.toggle("active");
-            if (sidebar.classList.contains("active")) {
-                sidebarBtn.classList.replace("bx-menu", "bx-menu-alt-right");
-            } else sidebarBtn.classList.replace("bx-menu-alt-right", "bx-menu");
-        };
-    </script>
 </body>
 </html>
 

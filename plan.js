@@ -164,5 +164,3 @@ let sidebar = document.querySelector(".sidebar");
       renderTasks();
       renderParticipants();
       renderTeams();
-
-

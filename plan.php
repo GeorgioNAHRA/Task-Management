@@ -191,6 +191,7 @@
       <link rel="stylesheet" href="dashboard.css" />
       <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />
       <link href="https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css" rel="stylesheet" />
+      <link rel="stylesheet" href="plan.css">
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <style>
          .file-upload {
@@ -428,60 +429,8 @@
             </div>
          </div>
       </section>
-      <script>
-         // Drag-and-drop file upload
-         const uploadArea = document.getElementById('file-upload-area');
-         const fileInput = document.getElementById('file-input');
-         
-         uploadArea.addEventListener('click', () => fileInput.click());
-         
-         fileInput.addEventListener('change', () => {
-             const form = document.getElementById('file-upload-form');
-             form.submit();
-         });
-         
-         uploadArea.addEventListener('dragover', (e) => {
-             e.preventDefault();
-             uploadArea.classList.add('dragover');
-         });
-         
-         uploadArea.addEventListener('dragleave', () => {
-             uploadArea.classList.remove('dragover');
-         });
-         
-         uploadArea.addEventListener('drop', (e) => {
-             e.preventDefault();
-             fileInput.files = e.dataTransfer.files;
-             const form = document.getElementById('file-upload-form');
-             form.submit();
-         });
-      </script>
+      <script src="upload.js"></script>
       </section>
-      <style>
-         .home-content {
-         padding: 20px;
-         }
-         .project-details {
-         background: #fff;
-         padding: 20px;
-         border-radius: 10px;
-         box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
-         margin-top: 20px;
-         }
-         .project-details h2, .project-details h3 {
-         margin-bottom: 15px;
-         }
-         .project-details ul {
-         list-style-type: disc;
-         margin-left: 20px;
-         }
-         .project-details h2 {
-         font-weight: normal;
-         }
-         .project-details h2 strong {
-         font-weight: bold;
-         }
-      </style>
    </body>
 </html>
 <?php $conn->close(); ?>

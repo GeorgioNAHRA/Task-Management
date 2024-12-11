@@ -63,14 +63,25 @@ function afficherProjets($conn, $user_id) {
                     <button type="submit" class="btn btn-info">Gérer</button>
                   </form>';
             echo '</td>';
+            echo '<td>';
+            // Boutons Modifier et Supprimer
+            echo '<form method="get" action="modifier_projet.php" style="display:inline-block; margin-right: 10px;">
+                    <input type="hidden" name="id" value="' . $row["IDProjet"] . '">
+                    <button type="submit" class="btn btn-warning">Modifier</button>
+                  </form>';
+            echo '<form method="post" action="" style="display:inline-block;">
+                    <input type="hidden" name="projet_id" value="' . $row["IDProjet"] . '">
+                    <button type="submit" name="supprimer_projet" class="btn btn-danger">Supprimer</button>
+                  </form>';
+            echo '</td>';
             echo '</tr>';
         }
     } else {
-        echo "<tr><td colspan='7'>Aucun projet à afficher.</td></tr>";
+        echo "<tr><td colspan='8'>Aucun projet à afficher.</td></tr>";
     }
 }
 
-// Suppression d'un projet (si nécessaire)
+// Supprimer un projet
 if (isset($_POST['supprimer_projet'])) {
     $projet_id = $_POST['projet_id'];
     $sql = "DELETE FROM Projet WHERE IDProjet='$projet_id'";
@@ -91,56 +102,7 @@ if (isset($_POST['supprimer_projet'])) {
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />
     <link href="https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css" rel="stylesheet" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <style>
-        .home-content {
-            padding: 20px;
-        }
-
-        /* Section des alertes */
-        .alert-warning {
-            background-color: #fff3cd;
-            border-color: #ffeeba;
-            color: #856404;
-            padding: 15px;
-            border-radius: 5px;
-            margin-bottom: 30px;
-        }
-
-        .table-striped > tbody > tr:nth-of-type(odd) {
-            background-color: #f9f9f9;
-        }
-
-        .table thead th {
-            text-align: left;
-            font-weight: bold;
-            background-color: #ffc107;
-            color: #fff;
-        }
-
-        /* Section des projets */
-        .projects-section {
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 10px;
-            margin-top: 30px;
-            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .projects-section h2 {
-            color: #333;
-            margin-bottom: 15px;
-        }
-
-        .projects-section table thead th {
-            background-color: #f8f9fa;
-            color: #333;
-            border-bottom: 2px solid #ddd;
-        }
-
-        .projects-section table tbody tr td {
-            color: #333;
-        }
-    </style>
+    <link rel="stylesheet" href="gestion_projet.css">
 </head>
 <body>
     <?php include('sidebar.php'); ?>
@@ -195,6 +157,7 @@ if (isset($_POST['supprimer_projet'])) {
                             <th>Statut</th>
                             <th>Budget</th>
                             <th>Gérer</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -204,16 +167,6 @@ if (isset($_POST['supprimer_projet'])) {
             </div>
         </div>
     </section>
-    <script>
-        let sidebar = document.querySelector(".sidebar");
-        let sidebarBtn = document.querySelector(".sidebarBtn");
-        sidebarBtn.onclick = function () {
-            sidebar.classList.toggle("active");
-            if (sidebar.classList.contains("active")) {
-                sidebarBtn.classList.replace("bx-menu", "bx-menu-alt-right");
-            } else sidebarBtn.classList.replace("bx-menu-alt-right", "bx-menu");
-        };
-    </script>
 </body>
 </html>
 
