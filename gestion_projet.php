@@ -98,11 +98,11 @@ if (isset($_POST['supprimer_projet'])) {
 <head>
     <meta charset="UTF-8" />
     <title>Gestion des Projets</title>
-    <link rel="stylesheet" href="dashboard.css" />
+    <link rel="stylesheet" href="css/dashboard.css" />
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />
     <link href="https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css" rel="stylesheet" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="gestion_projet.css">
+    <link rel="stylesheet" href="css/gestion_projet.css">
 </head>
 <body>
     <?php include('sidebar.php'); ?>

@@ -188,10 +188,10 @@
    <head>
       <meta charset="UTF-8" />
       <title>Nom du Projet</title>
-      <link rel="stylesheet" href="dashboard.css" />
+      <link rel="stylesheet" href="css/dashboard.css" />
       <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />
       <link href="https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css" rel="stylesheet" />
-      <link rel="stylesheet" href="plan.css">
+      <link rel="stylesheet" href="css/plan.css">
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <style>
          .file-upload {
@@ -429,7 +429,7 @@
             </div>
          </div>
       </section>
-      <script src="upload.js"></script>
+      <script src="js/upload.js"></script>
       </section>
    </body>
 </html>

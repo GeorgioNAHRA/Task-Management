@@ -53,16 +53,16 @@ if ($result->num_rows > 0) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calendrier - Gestion MNB</title>
-    <link rel="stylesheet" href="dashboard.css" />
+    <link rel="stylesheet" href="css/dashboard.css" />
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css" rel="stylesheet">
     <link href="https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="Calendrier.css">
-    <script type="text/javascript" src="sidebar.js"></script>
+    <link rel="stylesheet" href="css/calendrier.css">
+    <script type="text/javascript" src="js/sidebar.js"></script>
     <script>
         var tasks = <?php echo json_encode($taches); ?>;
     </script>
-    <script src="calendrier.js"></script>
+    <script src="js/calendrier.js"></script>
 </head>
 <body>
     <!-- Sidebar -->

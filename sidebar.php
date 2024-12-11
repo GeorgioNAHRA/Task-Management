@@ -2,7 +2,7 @@
     <!-- Intégration du logo -->
     <div class="logo-details">
         <a href="index.php" class="active d-flex align-items-center">
-            <img src="mnb.jpeg" alt="MNB Logo" style="width: 70px; height: 50px; object-fit: contain; position: relative; top: 15px; margin-right: 10px;">
+            <img src="images/mnb.jpeg" alt="MNB Logo" style="width: 70px; height: 50px; object-fit: contain; position: relative; top: 15px; margin-right: 10px;">
             <span class="logo_name">MNB</span>
         </a>
     </div>

@@ -212,11 +212,11 @@ if (isset($_POST['supprimer_projet'])) {
 <head>
     <meta charset="UTF-8" />
     <title>Admin Dashboard</title>
-    <link rel="stylesheet" href="dashboard.css" />
+    <link rel="stylesheet" href="css/dashboard.css" />
     <!-- Boxicons CDN Link -->
     <link href="https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css" rel="stylesheet" />
-    <link rel="stylesheet" href="gestion_client.css">
-    <script type="text/javascript" src="sidebar.js"></script>
+    <link rel="stylesheet" href="css/gestion_client.css">
+    <script type="text/javascript" src="js/sidebar.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 </head>
 <body>

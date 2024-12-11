@@ -136,14 +136,14 @@ if (isset($_SESSION['user_id'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MNB - Gestion de projet</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="MNB.css">
+    <link rel="stylesheet" href="css/mnb.css">
 </head>
 <body>
 <header class="bg-dark text-white py-3">
     <div class="container">
         <div class="d-flex justify-content-between align-items-center">
             <div class="d-flex align-items-center">
-                <img src="mnb.jpeg" alt="MNB Logo" style="width: 50px; height: 50px; object-fit: contain; margin-right: 15px;">
+                <img src="images/mnb.jpeg" alt="MNB Logo" style="width: 50px; height: 50px; object-fit: contain; margin-right: 15px;">
                 <a href="index.php" class="text-white text-decoration-none"><h1 class="h3 mb-0">MNB</h1></a>
             </div>
             <div class="d-flex align-items-center">
